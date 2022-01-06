@@ -1,11 +1,13 @@
-package ru.restaurants.repository;
+package ru.restaurants.repository.user;
 
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Repository;
+import org.springframework.util.Assert;
 import ru.restaurants.model.User;
 
 import java.util.List;
 
+import static ru.restaurants.util.ValidationUtil.checkNotFound;
 import static ru.restaurants.util.ValidationUtil.checkNotFoundWithId;
 
 @Repository
@@ -20,22 +22,24 @@ public class DataJpaUserRepository implements UserRepository {
 
     @Override
     public User save(User user) {
+        Assert.notNull(user, "user must not be null");
         return crudRepository.save(user);
     }
 
     @Override
-    public boolean delete(int id) {
-        return crudRepository.delete(id) != 0;
+    public void delete(int id) {
+        checkNotFoundWithId(crudRepository.delete(id) != 0,id);
     }
 
     @Override
     public User get(int id) {
-        return crudRepository.findById(id).orElse(null);
+        return checkNotFoundWithId(crudRepository.findById(id).orElse(null), id);
     }
 
     @Override
     public User getByEmail(String email) {
-        return crudRepository.getByEmail(email);
+        Assert.notNull(email, "email must not be null");
+        return checkNotFound(crudRepository.getByEmail(email), "email=" + email);
     }
 
     @Override
@@ -45,6 +49,7 @@ public class DataJpaUserRepository implements UserRepository {
 
     @Override
     public User update(User user) {
+        Assert.notNull(user, "user must not be null");
         return checkNotFoundWithId(save(user), user.getId());
     }
 }

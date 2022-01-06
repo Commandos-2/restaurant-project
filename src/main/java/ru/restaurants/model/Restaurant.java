@@ -1,14 +1,17 @@
 package ru.restaurants.model;
 
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import java.util.List;
 
+@Entity
+@Table(name = "restaurants")
 public class Restaurant extends AbstractNamedEntity {
-    private List<Meal> meals;
-    private Integer votes;
 
     public Restaurant(Integer id, String name, List<Meal> meals, Integer votes) {
         super(id, name);
-        this.meals = meals;
-        this.votes = votes;
+    }
+
+    public Restaurant() {
     }
 }
