@@ -1,6 +1,7 @@
 package ru.restaurants.model;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @MappedSuperclass
 public abstract class AbstractBaseEntity {
@@ -27,6 +28,19 @@ public abstract class AbstractBaseEntity {
 
     public boolean isNew() {
         return this.id == null;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        AbstractBaseEntity that = (AbstractBaseEntity) o;
+        return id.equals(that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 
     @Override

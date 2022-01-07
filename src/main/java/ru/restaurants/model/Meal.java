@@ -1,5 +1,8 @@
 package ru.restaurants.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.hibernate.validator.constraints.Range;
 
 import javax.persistence.*;
@@ -13,8 +16,10 @@ public class Meal extends AbstractNamedEntity {
     @Range(min = 1, max = 10000)
     private Integer price;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "restaurant_id", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JsonBackReference
     @NotNull
     private Restaurant restaurant;
 
@@ -23,6 +28,42 @@ public class Meal extends AbstractNamedEntity {
         this.price = price;
     }
 
+    public Meal(Integer id, String name, Integer price, Restaurant restaurant) {
+        super(id, name);
+        this.price = price;
+        this.restaurant = restaurant;
+    }
+
+    public Meal(Meal meal) {
+        super(meal.getId(), meal.getName());
+        this.price = meal.getPrice();
+    }
     public Meal() {
+    }
+
+    public Integer getPrice() {
+        return price;
+    }
+
+    public void setPrice(Integer price) {
+        this.price = price;
+    }
+
+    public Restaurant getRestaurant() {
+        return restaurant;
+    }
+
+    public void setRestaurant(Restaurant restaurant) {
+        this.restaurant = restaurant;
+    }
+
+    @Override
+    public String toString() {
+        return "Meal{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", price=" + price +
+                ", restaurant=" + restaurant +
+                '}';
     }
 }

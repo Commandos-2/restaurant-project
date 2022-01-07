@@ -76,6 +76,4 @@ class DataJpaUserRepositoryTest extends AbstractRepositoryTest {
         List<User> all = repository.getAll();
         USER_MATCHER.assertMatch(all, admin, user);
     }
-
-
 }
