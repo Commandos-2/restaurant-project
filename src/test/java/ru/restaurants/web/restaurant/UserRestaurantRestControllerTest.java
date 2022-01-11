@@ -1,0 +1,37 @@
+package ru.restaurants.web.restaurant;
+
+import org.junit.jupiter.api.Test;
+import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import ru.restaurants.AbstractControllerTest;
+
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static ru.restaurants.RestaurantTestData.*;
+import static ru.restaurants.TestUtil.userHttpBasic;
+import static ru.restaurants.UserTestData.user;
+
+class UserRestaurantRestControllerTest extends AbstractControllerTest {
+
+    private static final String REST_URL = UserRestaurantRestController.REST_URL + '/';
+    @Test
+    void getWithMeals() throws Exception {
+        perform(MockMvcRequestBuilders.get(REST_URL + RESTAURANT_1_ID + "/with-meals")
+                .with(userHttpBasic(user)))
+                .andExpect(status().isOk())
+                .andDo(print())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(RESTAURANT_WITH_MEALS_MATCHER.contentJson(restaurant1));
+    }
+
+    @Test
+    void getAllWithMeals() throws Exception {
+        perform(MockMvcRequestBuilders.get(REST_URL + RESTAURANT_1_ID + "/all-with-meals")
+                .with(userHttpBasic(user)))
+                .andExpect(status().isOk())
+                .andDo(print())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(RESTAURANT_WITH_MEALS_MATCHER.contentJson(restaurant1,restaurant2));
+    }
+}

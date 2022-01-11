@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.restaurants.model.Meal;
 
 import java.util.List;
+import java.util.Optional;
 
 @Transactional(readOnly = true)
 public interface CrudMealRepository extends JpaRepository<Meal, Integer> {
@@ -17,5 +18,8 @@ public interface CrudMealRepository extends JpaRepository<Meal, Integer> {
     int delete(@Param("id") int id);
 
     @Query("SELECT m FROM Meal m WHERE m.restaurant.id=:restaurantId ORDER BY m.name")
-    List<Meal> getAll(@Param("restaurantId") int restaurantId);
+    List<Meal> getAllByRestaurant(@Param("restaurantId") int restaurantId);
+
+    @Query("SELECT m FROM Meal m JOIN FETCH m.restaurant WHERE m.id=:id")
+    Optional<Meal> getWithRestaurant(@Param("id") int id);
 }

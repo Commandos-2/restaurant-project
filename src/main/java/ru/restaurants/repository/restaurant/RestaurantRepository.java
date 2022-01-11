@@ -1,6 +1,7 @@
 package ru.restaurants.repository.restaurant;
 
 
+import ru.restaurants.model.Meal;
 import ru.restaurants.model.Restaurant;
 import ru.restaurants.model.User;
 
@@ -16,5 +17,13 @@ public interface RestaurantRepository {
 
     List<Restaurant> getAll();
 
-    Restaurant update(Restaurant user);
+    Restaurant update(Restaurant restaurant);
+
+    default Restaurant getWithMeals(int id) {
+        throw new UnsupportedOperationException();
+    }
+
+    default List<Restaurant> getAllWithMeals() {
+        throw new UnsupportedOperationException();
+    }
 }

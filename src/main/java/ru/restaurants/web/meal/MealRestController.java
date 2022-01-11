@@ -29,10 +29,10 @@ public class MealRestController {
         this.repository = repository;
     }
 
-    @GetMapping("/all/{restaurantId}")
-    public List<Meal> getAll(@PathVariable int restaurantId) {
-        log.info("getAll");
-        return repository.getAll(restaurantId);
+    @GetMapping("/allByRestaurant/{restaurantId}")
+    public List<Meal> getAllByRestaurant(@PathVariable int restaurantId) {
+        log.info("getAllByRestaurant");
+        return repository.getAllByRestaurant(restaurantId);
     }
 
     @GetMapping("/{id}")
@@ -59,11 +59,11 @@ public class MealRestController {
         repository.delete(id);
     }
 
-    @PutMapping(value = "/{restaurantId}/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value = "/{restaurantId}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void update(@RequestBody Meal meal,@PathVariable int restaurantId, @PathVariable int id) {
-        log.info("update {} with id={}", meal, id);
-        assureIdConsistent(meal, id);
+    public void update(@RequestBody Meal meal,@PathVariable int restaurantId) {
+        log.info("update {} with id={}", meal, meal.getId());
+        assureIdConsistent(meal, meal.getId());
         repository.update(meal,restaurantId);
     }
 }

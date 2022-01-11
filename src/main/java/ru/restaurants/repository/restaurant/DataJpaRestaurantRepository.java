@@ -3,6 +3,7 @@ package ru.restaurants.repository.restaurant;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.Assert;
+import ru.restaurants.model.Meal;
 import ru.restaurants.model.Restaurant;
 
 import java.util.List;
@@ -22,6 +23,9 @@ public class DataJpaRestaurantRepository implements RestaurantRepository {
     @Override
     public Restaurant save(Restaurant restaurant) {
         Assert.notNull(restaurant, "restaurant must not be null");
+        if (!restaurant.isNew() && get(restaurant.getId()) == null) {
+            return null;
+        }
         return crudRepository.save(restaurant);
     }
 
@@ -44,5 +48,14 @@ public class DataJpaRestaurantRepository implements RestaurantRepository {
     public Restaurant update(Restaurant restaurant) {
         Assert.notNull(restaurant, "restaurant must not be null");
         return checkNotFoundWithId(save(restaurant), restaurant.getId());
+    }
+    @Override
+    public Restaurant getWithMeals(int id) {
+        return crudRepository.getWithMeals(id).orElse(null);
+    }
+
+    @Override
+    public List<Restaurant> getAllWithMeals() {
+        return crudRepository.getAllWithMeals();
     }
 }

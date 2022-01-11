@@ -1,8 +1,6 @@
 package ru.restaurants.repository.restaurant;
 
 import org.junit.jupiter.api.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import ru.restaurants.model.Restaurant;
@@ -15,7 +13,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static ru.restaurants.RestaurantTestData.*;
 
 class DataJpaRestaurantRepositoryTest extends AbstractRepositoryTest {
-    protected final Logger log = LoggerFactory.getLogger(getClass());
     @Autowired
     protected RestaurantRepository repository;
 

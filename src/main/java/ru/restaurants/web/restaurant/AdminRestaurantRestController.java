@@ -17,15 +17,15 @@ import static ru.restaurants.util.ValidationUtil.assureIdConsistent;
 import static ru.restaurants.util.ValidationUtil.checkNew;
 
 @RestController
-@RequestMapping(value = RestaurantRestController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
-public class RestaurantRestController {
+@RequestMapping(value = AdminRestaurantRestController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
+public class AdminRestaurantRestController {
     protected final Logger log = LoggerFactory.getLogger(getClass());
 
     private final RestaurantRepository repository;
 
     static final String REST_URL = "/rest/admin/restaurant";
 
-    public RestaurantRestController(RestaurantRepository repository) {
+    public AdminRestaurantRestController(RestaurantRepository repository) {
         this.repository = repository;
     }
 

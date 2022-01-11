@@ -1,8 +1,6 @@
 package ru.restaurants.repository.user;
 
 import org.junit.jupiter.api.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import ru.restaurants.model.Role;
@@ -12,11 +10,10 @@ import ru.restaurants.util.exсeption.NotFoundException;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static ru.restaurants.UserTestData.*;
 
 class DataJpaUserRepositoryTest extends AbstractRepositoryTest {
-    protected final Logger log = LoggerFactory.getLogger(getClass());
     @Autowired
     protected UserRepository repository;
 
@@ -33,7 +30,7 @@ class DataJpaUserRepositoryTest extends AbstractRepositoryTest {
     @Test
     void duplicateMailCreate() {
         assertThrows(DataAccessException.class, () ->
-                repository.save(new User(null, "Duplicate","newPass", "user@yandex.ru",  Role.USER)));
+                repository.save(new User(null, "Duplicate", "newPass", "user@yandex.ru", Role.USER)));
     }
 
     @Test

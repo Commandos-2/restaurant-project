@@ -12,7 +12,9 @@ public interface MealRepository {
 
     Meal get(int id);
 
-    List<Meal> getAll(int restaurantId);
+    List<Meal> getAllByRestaurant(int restaurantId);
 
     Meal update(Meal meal,int restaurantId);
+
+    Meal getWithRestaurant(int id);
 }

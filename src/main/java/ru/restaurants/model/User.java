@@ -11,7 +11,7 @@ import java.util.Date;
 
 @Entity
 @Table(name = "users")
-public class User extends AbstractNamedEntity implements Serializable {
+public class User extends AbstractNamedEntity {
 
     @Serial
     private static final long serialVersionUID = 1L;
@@ -35,21 +35,20 @@ public class User extends AbstractNamedEntity implements Serializable {
     @NotNull
     private Date registered=new Date();
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "restaurant_id")
-    private Restaurant restaurant;
-
     public User(Integer id, String name, String password, String email, Role role, Date registered) {
         super(id, name);
         this.password = password;
         this.email = email;
         this.role = role;
         this.registered = registered;
-        this.restaurant = null;
     }
 
     public User(Integer id, String name, String password, String email, Role role) {
         this(id,name,password,email,role,new Date());
+    }
+
+    public User(Integer id, String name, String password, String email) {
+        this(id,name,password,email,null,new Date());
     }
 
     public User(User user) {
@@ -83,14 +82,6 @@ public class User extends AbstractNamedEntity implements Serializable {
         return role;
     }
 
-    public Restaurant getRestaurant() {
-        return restaurant;
-    }
-
-    public void setRestaurant(Restaurant restaurant) {
-        this.restaurant = restaurant;
-    }
-
     public void setPassword(String password) {
         this.password = password;
     }
@@ -116,7 +107,6 @@ public class User extends AbstractNamedEntity implements Serializable {
                 ", email='" + email + '\'' +
                 ", role=" + role +
                 ", registered=" + registered +
-                ", restaurant=" + restaurant +
                 '}';
     }
 }

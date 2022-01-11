@@ -19,8 +19,8 @@ import static ru.restaurants.RestaurantTestData.*;
 import static ru.restaurants.TestUtil.userHttpBasic;
 import static ru.restaurants.UserTestData.admin;
 
-class RestaurantRestControllerTest extends AbstractControllerTest {
-    private static final String REST_URL = RestaurantRestController.REST_URL + '/';
+class AdminRestaurantRestControllerTest extends AbstractControllerTest {
+    private static final String REST_URL = AdminRestaurantRestController.REST_URL + '/';
 
     @Autowired
     private RestaurantRepository repository;
@@ -80,5 +80,4 @@ class RestaurantRestControllerTest extends AbstractControllerTest {
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(RESTAURANT_MATCHER.contentJson(restaurant1, restaurant2));
     }
-
 }

@@ -3,6 +3,7 @@ package ru.restaurants.web.user;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import ru.restaurants.AbstractControllerTest;
 import ru.restaurants.model.Role;
@@ -15,12 +16,30 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static ru.restaurants.TestUtil.userHttpBasic;
 import static ru.restaurants.UserTestData.*;
-import static ru.restaurants.web.user.ProfileRestController.REST_URL;
 
 
 class ProfileRestControllerTest extends AbstractControllerTest {
+
+    private static final String REST_URL = ProfileRestController.REST_URL + '/';
     @Autowired
     private UserRepository repository;
+
+    @Test
+    void register() throws Exception {
+        User newUser = new User(null, "newName", "newPassword", "newemail@ya.ru");
+        ResultActions action = perform(MockMvcRequestBuilders.post(REST_URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(JsonUtil.writeValue(newUser)))
+                .andDo(print())
+                .andExpect(status().isCreated());
+
+        User created = USER_MATCHER.readFromJson(action);
+        int newId = created.getId();
+        newUser.setId(newId);
+        newUser.setRole(Role.USER);
+        USER_MATCHER.assertMatch(created, newUser);
+        USER_MATCHER.assertMatch(repository.get(newId), newUser);
+    }
 
     @Test
     void get() throws Exception {
@@ -53,7 +72,7 @@ class ProfileRestControllerTest extends AbstractControllerTest {
                 .content(JsonUtil.writeValue(updated)))
                 .andDo(print())
                 .andExpect(status().isNoContent());
-        User newUser=repository.get(USER_ID);
+        User newUser = repository.get(USER_ID);
         updated.setId(newUser.getId());
         USER_MATCHER.assertMatch(newUser, updated);
     }

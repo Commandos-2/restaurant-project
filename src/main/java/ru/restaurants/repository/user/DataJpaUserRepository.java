@@ -34,7 +34,7 @@ public class DataJpaUserRepository implements UserRepository, UserDetailsService
 
     @Override
     public void delete(int id) {
-        checkNotFoundWithId(crudRepository.delete(id) != 0,id);
+        checkNotFoundWithId(crudRepository.delete(id) != 0, id);
     }
 
     @Override
@@ -45,7 +45,7 @@ public class DataJpaUserRepository implements UserRepository, UserDetailsService
     @Override
     public User getByEmail(String email) {
         Assert.notNull(email, "email must not be null");
-        return checkNotFound(crudRepository.getByEmail(email), "email=" + email);
+        return checkNotFound(crudRepository.getByEmail(email).orElse(null), "email=" + email);
     }
 
     @Override
