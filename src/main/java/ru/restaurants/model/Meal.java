@@ -10,7 +10,7 @@ import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "meals")
+@Table(name = "meal")
 public class Meal extends AbstractNamedEntity {
 
     @Column(name = "price", nullable = false)
@@ -19,7 +19,6 @@ public class Meal extends AbstractNamedEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "restaurant_id", nullable = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonBackReference()
     @NotNull
     private Restaurant restaurant;

@@ -26,14 +26,14 @@ class UserChoiceRestControllerTest extends AbstractControllerTest {
     private static final String REST_URL = UserChoiceRestController.REST_URL + '/';
 
     @Autowired
-    private ChoiceRepository repository;
+    private ChoiceRepository choiceRepository;
 
     @Autowired
     private UserRepository userRepository;
 
     @Test
     void update() throws Exception {
-        SetDateChoice(repository, LocalTime.MAX,true);
+        SetDateChoice(choiceRepository, LocalTime.MAX,true);
         User updateUser=userRepository.get(USER_ID);
         updateUser.setDateLastChoice(user.getDateLastChoice());
         ResultActions action = perform(MockMvcRequestBuilders.post(REST_URL)
@@ -46,7 +46,7 @@ class UserChoiceRestControllerTest extends AbstractControllerTest {
         int newId = created1.getId();
         Choice newChoice= new Choice(choice1);
         newChoice.setRestaurant(restaurant1);
-        Choice created2 = repository.get(newId);
+        Choice created2 = choiceRepository.get(newId);
         CHOICE_MATCHER.assertMatch(created1, newChoice);
         CHOICE_MATCHER.assertMatch(created2, newChoice);
         USER_MATCHER.assertMatch(created2.getUser(), user);
@@ -55,7 +55,7 @@ class UserChoiceRestControllerTest extends AbstractControllerTest {
 
     @Test
     void updateAfterLimitTime() throws Exception {
-        SetDateChoice(repository, LocalTime.MIN,true);
+        SetDateChoice(choiceRepository, LocalTime.MIN,true);
         User updateUser=userRepository.get(USER_ID);
         updateUser.setDateLastChoice(user.getDateLastChoice());
         perform(MockMvcRequestBuilders.post(REST_URL)
@@ -67,7 +67,7 @@ class UserChoiceRestControllerTest extends AbstractControllerTest {
 
     @Test
     void createWithLocation() throws Exception {
-        SetDateChoice(repository, LocalTime.MIN,true);
+        SetDateChoice(choiceRepository, LocalTime.MIN,true);
         User updateadmin=userRepository.get(ADMIN_ID);
         updateadmin.setDateLastChoice(admin.getDateLastChoice());
         ResultActions action = perform(MockMvcRequestBuilders.post(REST_URL)
@@ -79,7 +79,7 @@ class UserChoiceRestControllerTest extends AbstractControllerTest {
         int newId = created1.getId();
         Choice newChoice = new Choice(choice4);
         newChoice.setId(newId);
-        Choice created2 = repository.get(newId);
+        Choice created2 = choiceRepository.get(newId);
         CHOICE_MATCHER.assertMatch(created1, newChoice);
         CHOICE_MATCHER.assertMatch(created2, newChoice);
         USER_MATCHER.assertMatch(created2.getUser(), admin);

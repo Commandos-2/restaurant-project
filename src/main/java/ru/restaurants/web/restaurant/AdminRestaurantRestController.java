@@ -21,31 +21,31 @@ import static ru.restaurants.util.ValidationUtil.checkNew;
 public class AdminRestaurantRestController {
     protected final Logger log = LoggerFactory.getLogger(getClass());
 
-    private final RestaurantRepository repository;
+    private final RestaurantRepository restaurantRepository;
 
-    static final String REST_URL = "/rest/admin/restaurant";
+    static final String REST_URL = "/rest/admin/restaurants";
 
-    public AdminRestaurantRestController(RestaurantRepository repository) {
-        this.repository = repository;
+    public AdminRestaurantRestController(RestaurantRepository restaurantRepository) {
+        this.restaurantRepository = restaurantRepository;
     }
 
     @GetMapping
     public List<Restaurant> getAll() {
         log.info("getAll");
-        return repository.getAll();
+        return restaurantRepository.getAll();
     }
 
     @GetMapping("/{id}")
     public Restaurant get(@PathVariable int id) {
         log.info("get {}", id);
-        return repository.get(id);
+        return restaurantRepository.get(id);
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Restaurant> createWithLocation(@RequestBody Restaurant Restaurant) {
         log.info("create {}", Restaurant);
         checkNew(Restaurant);
-        Restaurant created = repository.save(Restaurant);
+        Restaurant created = restaurantRepository.save(Restaurant);
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path(REST_URL + "/{id}")
                 .buildAndExpand(created.getId()).toUri();
@@ -56,7 +56,7 @@ public class AdminRestaurantRestController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable int id) {
         log.info("delete {}", id);
-        repository.delete(id);
+        restaurantRepository.delete(id);
     }
 
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -64,18 +64,18 @@ public class AdminRestaurantRestController {
     public void update(@RequestBody Restaurant Restaurant, @PathVariable int id) {
         log.info("update {} with id={}", Restaurant, id);
         assureIdConsistent(Restaurant, id);
-        repository.update(Restaurant);
+        restaurantRepository.update(Restaurant);
     }
 
     @GetMapping("/{id}/with-meals")
     public Restaurant getWithMeals(@PathVariable int id) {
         log.info("getWithMeals {}", id);
-        return repository.getWithMeals(id);
+        return restaurantRepository.getWithMeals(id);
     }
 
     @GetMapping("/all-with-meals")
     public List<Restaurant> getAllWithMeals() {
         log.info("getAllWithMeals ");
-        return repository.getAllWithMeals();
+        return restaurantRepository.getAllWithMeals();
     }
 }

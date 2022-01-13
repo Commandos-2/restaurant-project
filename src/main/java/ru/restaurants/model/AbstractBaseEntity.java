@@ -31,14 +31,6 @@ public abstract class AbstractBaseEntity {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        AbstractBaseEntity that = (AbstractBaseEntity) o;
-        return id.equals(that.id);
-    }
-
-    @Override
     public String toString() {
         return getClass().getSimpleName() + ":" + id;
     }

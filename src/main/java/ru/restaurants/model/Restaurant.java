@@ -8,7 +8,7 @@ import javax.persistence.*;
 import java.util.List;
 
 @Entity
-@Table(name = "restaurants")
+@Table(name = "restaurant")
 public class Restaurant extends AbstractNamedEntity {
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "restaurant")
@@ -23,6 +23,7 @@ public class Restaurant extends AbstractNamedEntity {
 
     public Restaurant(Restaurant restaurant) {
         super(restaurant.getId(), restaurant.getName());
+        this.setMeals(restaurant.getMeals());
     }
 
     public Restaurant() {
@@ -41,6 +42,7 @@ public class Restaurant extends AbstractNamedEntity {
         return "Restaurant{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
+                ", meals=" + meals +
                 '}';
     }
 }

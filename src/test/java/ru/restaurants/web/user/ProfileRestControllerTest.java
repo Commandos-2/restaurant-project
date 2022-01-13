@@ -22,7 +22,7 @@ class ProfileRestControllerTest extends AbstractControllerTest {
 
     private static final String REST_URL = ProfileRestController.REST_URL + '/';
     @Autowired
-    private UserRepository repository;
+    private UserRepository userRepository;
 
     @Test
     void register() throws Exception {
@@ -38,7 +38,7 @@ class ProfileRestControllerTest extends AbstractControllerTest {
         newUser.setId(newId);
         newUser.setRole(Role.USER);
         USER_MATCHER.assertMatch(created, newUser);
-        USER_MATCHER.assertMatch(repository.get(newId), newUser);
+        USER_MATCHER.assertMatch(userRepository.get(newId), newUser);
     }
 
     @Test
@@ -61,7 +61,7 @@ class ProfileRestControllerTest extends AbstractControllerTest {
         perform(MockMvcRequestBuilders.delete(REST_URL)
                 .with(userHttpBasic(user)))
                 .andExpect(status().isNoContent());
-        USER_MATCHER.assertMatch(repository.getAll(), admin);
+        USER_MATCHER.assertMatch(userRepository.getAll(), admin);
     }
 
     @Test
@@ -72,7 +72,7 @@ class ProfileRestControllerTest extends AbstractControllerTest {
                 .content(JsonUtil.writeValue(updated)))
                 .andDo(print())
                 .andExpect(status().isNoContent());
-        User newUser = repository.get(USER_ID);
+        User newUser = userRepository.get(USER_ID);
         updated.setId(newUser.getId());
         USER_MATCHER.assertMatch(newUser, updated);
     }

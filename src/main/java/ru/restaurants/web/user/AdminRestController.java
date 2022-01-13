@@ -21,31 +21,31 @@ import static ru.restaurants.util.ValidationUtil.checkNew;
 public class AdminRestController{
     protected final Logger log = LoggerFactory.getLogger(getClass());
 
-        private final UserRepository repository;
+        private final UserRepository userRepository;
 
     static final String REST_URL = "/rest/admin/users";
 
-    public AdminRestController(UserRepository repository) {
-        this.repository = repository;
+    public AdminRestController(UserRepository userRepository) {
+        this.userRepository = userRepository;
     }
 
     @GetMapping
     public List<User> getAll() {
         log.info("getAll");
-        return repository.getAll();
+        return userRepository.getAll();
     }
 
     @GetMapping("/{id}")
     public User get(@PathVariable int id) {
         log.info("get {}", id);
-        return repository.get(id);
+        return userRepository.get(id);
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<User> createWithLocation(@RequestBody User user) {
         log.info("create {}", user);
         checkNew(user);
-        User created = repository.save(user);
+        User created = userRepository.save(user);
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path(REST_URL + "/{id}")
                 .buildAndExpand(created.getId()).toUri();
@@ -56,7 +56,7 @@ public class AdminRestController{
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable int id) {
         log.info("delete {}", id);
-        repository.delete(id);
+        userRepository.delete(id);
     }
 
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -64,12 +64,12 @@ public class AdminRestController{
     public void update(@RequestBody User user, @PathVariable int id) {
         log.info("update {} with id={}", user, id);
         assureIdConsistent(user, id);
-        repository.update(user);
+        userRepository.update(user);
     }
 
     @GetMapping("/by-email")
     public User getByMail(@RequestParam String email) {
         log.info("getByEmail {}", email);
-        return repository.getByEmail(email);
+        return userRepository.getByEmail(email);
     }
 }

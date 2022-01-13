@@ -11,8 +11,6 @@ import ru.restaurants.repository.restaurant.RestaurantRepository;
 import ru.restaurants.util.exсeption.NotFoundException;
 import ru.restaurants.web.json.JsonUtil;
 
-import java.util.List;
-
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -27,7 +25,7 @@ class AdminRestaurantRestControllerTest extends AbstractControllerTest {
     private static final String REST_URL = AdminRestaurantRestController.REST_URL + '/';
 
     @Autowired
-    private RestaurantRepository repository;
+    private RestaurantRepository restaurantRepository;
 
     @Test
     void get() throws Exception {
@@ -45,7 +43,7 @@ class AdminRestaurantRestControllerTest extends AbstractControllerTest {
                 .with(userHttpBasic(admin)))
                 .andDo(print())
                 .andExpect(status().isNoContent());
-        assertThrows(NotFoundException.class, () -> repository.get(RESTAURANT_1_ID));
+        assertThrows(NotFoundException.class, () -> restaurantRepository.get(RESTAURANT_1_ID));
     }
 
     @Test
@@ -57,7 +55,7 @@ class AdminRestaurantRestControllerTest extends AbstractControllerTest {
                 .content(JsonUtil.writeValue(updated)))
                 .andExpect(status().isNoContent());
 
-        RESTAURANT_MATCHER.assertMatch(repository.get(RESTAURANT_1_ID), updated);
+        RESTAURANT_MATCHER.assertMatch(restaurantRepository.get(RESTAURANT_1_ID), updated);
     }
 
     @Test
@@ -73,7 +71,7 @@ class AdminRestaurantRestControllerTest extends AbstractControllerTest {
         int newId = created.getId();
         newRestaurant.setId(newId);
         RESTAURANT_MATCHER.assertMatch(created, newRestaurant);
-        RESTAURANT_MATCHER.assertMatch(repository.get(newId), newRestaurant);
+        RESTAURANT_MATCHER.assertMatch(restaurantRepository.get(newId), newRestaurant);
     }
 
     @Test

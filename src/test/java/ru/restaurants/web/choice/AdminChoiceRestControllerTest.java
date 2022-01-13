@@ -20,7 +20,7 @@ class AdminChoiceRestControllerTest extends AbstractControllerTest {
     private static final String REST_URL = AdminChoiceRestController.REST_URL + '/';
 
     @Autowired
-    private ChoiceRepository repository;
+    private ChoiceRepository choiceRepository;
 
     @Test
     void get() throws Exception {
@@ -38,7 +38,7 @@ class AdminChoiceRestControllerTest extends AbstractControllerTest {
                 .with(userHttpBasic(admin)))
                 .andDo(print())
                 .andExpect(status().isNoContent());
-        assertThrows(NotFoundException.class, () -> repository.get(CHOICE_1_ID));
+        assertThrows(NotFoundException.class, () -> choiceRepository.get(CHOICE_1_ID));
     }
 
     @Test

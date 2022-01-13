@@ -16,62 +16,62 @@ import static ru.restaurants.UserTestData.*;
 
 class DataJpaUserRepositoryTest extends AbstractRepositoryTest {
     @Autowired
-    protected UserRepository repository;
+    protected UserRepository userRepository;
 
     @Test
     public void create() {
-        User created = repository.save(getNew());
+        User created = userRepository.save(getNew());
         int newId = created.getId();
         User newUser = getNew();
         newUser.setId(newId);
         USER_MATCHER.assertMatch(created, newUser);
-        USER_MATCHER.assertMatch(repository.get(newId), newUser);
+        USER_MATCHER.assertMatch(userRepository.get(newId), newUser);
     }
 
     @Test
     void duplicateMailCreate() {
         assertThrows(DataAccessException.class, () ->
-                repository.save(new User(null, "Duplicate", "newPass", "user@yandex.ru", Role.USER, LocalDateTime.now())));
+                userRepository.save(new User(null, "Duplicate", "newPass", "user@yandex.ru", Role.USER, LocalDateTime.now())));
     }
 
     @Test
     void delete() {
-        repository.delete(USER_ID);
-        assertThrows(NotFoundException.class, () -> repository.get(USER_ID));
+        userRepository.delete(USER_ID);
+        assertThrows(NotFoundException.class, () -> userRepository.get(USER_ID));
     }
 
     @Test
     void deletedNotFound() {
-        assertThrows(NotFoundException.class, () -> repository.delete(NOT_FOUND));
+        assertThrows(NotFoundException.class, () -> userRepository.delete(NOT_FOUND));
     }
 
     @Test
     void get() {
-        User user = repository.get(ADMIN_ID);
+        User user = userRepository.get(ADMIN_ID);
         USER_MATCHER.assertMatch(user, admin);
     }
 
     @Test
     void getNotFound() {
-        assertThrows(NotFoundException.class, () -> repository.get(NOT_FOUND));
+        assertThrows(NotFoundException.class, () -> userRepository.get(NOT_FOUND));
     }
 
     @Test
     void getByEmail() {
-        User user = repository.getByEmail("admin@gmail.com");
+        User user = userRepository.getByEmail("admin@gmail.com");
         USER_MATCHER.assertMatch(user, admin);
     }
 
     @Test
     void update() {
         User updated = getUpdated();
-        repository.update(updated);
-        USER_MATCHER.assertMatch(repository.get(USER_ID), getUpdated());
+        userRepository.update(updated);
+        USER_MATCHER.assertMatch(userRepository.get(USER_ID), getUpdated());
     }
 
     @Test
     void getAll() {
-        List<User> all = repository.getAll();
+        List<User> all = userRepository.getAll();
         USER_MATCHER.assertMatch(all, admin, user);
     }
 }

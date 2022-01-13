@@ -23,7 +23,7 @@ class AdminRestControllerTest extends AbstractControllerTest {
     private static final String REST_URL = AdminRestController.REST_URL + '/';
 
     @Autowired
-    private UserRepository repository;
+    private UserRepository userRepository;
 
     @Test
     void get() throws Exception {
@@ -50,7 +50,7 @@ class AdminRestControllerTest extends AbstractControllerTest {
                 .with(userHttpBasic(admin)))
                 .andDo(print())
                 .andExpect(status().isNoContent());
-        assertThrows(NotFoundException.class, () -> repository.get(USER_ID));
+        assertThrows(NotFoundException.class, () -> userRepository.get(USER_ID));
     }
 
     @Test
@@ -62,7 +62,7 @@ class AdminRestControllerTest extends AbstractControllerTest {
                 .content(JsonUtil.writeValue(updated)))
                 .andExpect(status().isNoContent());
 
-        USER_MATCHER.assertMatch(repository.get(USER_ID), updated);
+        USER_MATCHER.assertMatch(userRepository.get(USER_ID), updated);
     }
 
     @Test
@@ -78,7 +78,7 @@ class AdminRestControllerTest extends AbstractControllerTest {
         int newId = created.getId();
         newUser.setId(newId);
         USER_MATCHER.assertMatch(created, newUser);
-        USER_MATCHER.assertMatch(repository.get(newId), newUser);
+        USER_MATCHER.assertMatch(userRepository.get(newId), newUser);
     }
 
     @Test

@@ -1,22 +1,61 @@
 package ru.restaurants.repository.choice;
 
+import org.springframework.stereotype.Repository;
+import org.springframework.util.Assert;
 import ru.restaurants.model.Choice;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.util.List;
 
-public interface ChoiceRepository {
+import static ru.restaurants.util.ValidationUtil.checkNotFoundWithId;
 
-    Choice save(Choice choice);
+@Repository
+public class ChoiceRepository {
 
-    void delete(int id);
+    @PersistenceContext
+    private EntityManager em;
 
-    Choice get(int id);
+    private final CrudChoiceRepository crudChoiceRepository;
 
-    List<Choice> getAll();
+    public ChoiceRepository(CrudChoiceRepository crudChoiceRepository) {
+        this.crudChoiceRepository = crudChoiceRepository;
+    }
 
-    List<Choice> getAllByUserId(int userId);
+    public Choice save(Choice choice) {
+        Assert.notNull(choice, "Choice must not be null");
+        if (!choice.isNew() && get(choice.getId()) == null) {
+            return null;
+        }
+        return crudChoiceRepository.save(choice);
+    }
 
-    Choice update(Choice choice);
+    public void delete(int id) {
+        checkNotFoundWithId(crudChoiceRepository.delete(id) != 0, id);
+    }
 
-    Choice getLastChoiceByUser(int userId);
+    public Choice get(int id) {
+        return checkNotFoundWithId(crudChoiceRepository.get(id).orElse(null), id);
+    }
+
+    public List<Choice> getAll() {
+        return crudChoiceRepository.getAll();
+    }
+
+    public List<Choice> getAllByUserId(int userId) {
+        return crudChoiceRepository.getAllByUserId(userId);
+    }
+
+    public Choice update(Choice choice) {
+        Assert.notNull(choice, "Choice must not be null");
+        return checkNotFoundWithId(save(choice), choice.getId());
+    }
+
+    public Choice getLastChoiceByUser(int userId) {
+        Object choice = em.createQuery("SELECT u FROM Choice u WHERE u.user.id=?1 ORDER BY u.registered DESC")
+                .setMaxResults(1)
+                .setParameter(1, userId)
+                .getSingleResult();
+        return (Choice) choice;
+    }
 }

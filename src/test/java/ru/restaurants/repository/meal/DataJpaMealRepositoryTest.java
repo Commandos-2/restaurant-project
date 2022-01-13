@@ -3,6 +3,7 @@ package ru.restaurants.repository.meal;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
+import org.springframework.transaction.annotation.Transactional;
 import ru.restaurants.MealTestData;
 import ru.restaurants.model.Meal;
 import ru.restaurants.repository.AbstractRepositoryTest;
@@ -19,72 +20,77 @@ import static ru.restaurants.TestUtil.SetDateMeal;
 
 class DataJpaMealRepositoryTest extends AbstractRepositoryTest {
     @Autowired
-    protected MealRepository repository;
+    protected MealRepository mealRepository;
     @Autowired
     protected RestaurantRepository repositoryRestaurant;
 
     @Test
+    @Transactional
     public void create() {
-        Meal created = repository.save(MealTestData.getNew(), RESTAURANT_2_ID);
+        Meal created = mealRepository.save(MealTestData.getNew(), RESTAURANT_2_ID);
         int newId = created.getId();
         Meal newMeal = MealTestData.getNew();
         newMeal.setId(newId);
         MEAL_MATCHER.assertMatch(created, newMeal);
-        MEAL_MATCHER.assertMatch(repository.get(newId), newMeal);
+        MEAL_MATCHER.assertMatch(mealRepository.get(newId), newMeal);
+        RESTAURANT_MATCHER.assertMatch(mealRepository.get(newId).getRestaurant(), newMeal.getRestaurant());
     }
 
     @Test
     void duplicateNameCreate() {
         assertThrows(DataAccessException.class, () ->
-                repository.save(new Meal(null, meal1.getName(), 222, restaurant1), RESTAURANT_1_ID));
+                mealRepository.save(new Meal(null, meal1.getName(), 222, restaurant1), RESTAURANT_1_ID));
     }
 
     @Test
     void delete() {
-        repository.delete(MEAL_ID);
-        assertThrows(NotFoundException.class, () -> repository.get(MEAL_ID));
+        mealRepository.delete(MEAL_ID);
+        assertThrows(NotFoundException.class, () -> mealRepository.get(MEAL_ID));
     }
 
     @Test
     void deletedNotFound() {
-        assertThrows(NotFoundException.class, () -> repository.delete(NOT_FOUND));
+        assertThrows(NotFoundException.class, () -> mealRepository.delete(NOT_FOUND));
     }
 
     @Test
     void get() {
-        Meal Meal = repository.get(ADMIN_ID);
+        Meal Meal = mealRepository.get(ADMIN_ID);
         MEAL_MATCHER.assertMatch(Meal, meal6);
     }
 
     @Test
     void getWithRestaurant() {
-        Meal meal = repository.getWithRestaurant(ADMIN_ID);
+        Meal meal = mealRepository.getWithRestaurant(ADMIN_ID);
         MEAL_MATCHER.assertMatch(meal, meal6);
         RESTAURANT_MATCHER.assertMatch(meal.getRestaurant(), meal6.getRestaurant());
     }
 
     @Test
     void getNotFound() {
-        assertThrows(NotFoundException.class, () -> repository.get(NOT_FOUND));
+        assertThrows(NotFoundException.class, () -> mealRepository.get(NOT_FOUND));
     }
 
     @Test
+    @Transactional
     void update() {
         Meal updated = MealTestData.getUpdated();
-        repository.update(updated, RESTAURANT_2_ID);
-        MEAL_MATCHER.assertMatch(repository.get(MEAL_ID), MealTestData.getUpdated());
+        mealRepository.update(updated, RESTAURANT_2_ID);
+        MEAL_MATCHER.assertMatch(mealRepository.get(MEAL_ID), MealTestData.getUpdated());
+        RESTAURANT_MATCHER.assertMatch(mealRepository.get(updated.getId()).getRestaurant(), updated.getRestaurant());
+
     }
 
     @Test
     void getAllByRestaurant() {
-        List<Meal> all = repository.getAllByRestaurant(RESTAURANT_1_ID);
+        List<Meal> all = mealRepository.getAllByRestaurant(RESTAURANT_1_ID);
         MEAL_MATCHER.assertMatch(all, mealsRestaurant1);
     }
 
     @Test
     void getAllByRestaurantToday() {
-        SetDateMeal(repository);
-        List<Meal> all = repository.getAllByRestaurantToday(RESTAURANT_1_ID);
+        SetDateMeal(mealRepository);
+        List<Meal> all = mealRepository.getAllByRestaurantToday(RESTAURANT_1_ID);
         MEAL_MATCHER.assertMatch(all, meal3, meal1, meal5);
     }
 }

@@ -16,62 +16,62 @@ import static ru.restaurants.UserTestData.user;
 
 class DataJpaChoiceRepositoryTest extends AbstractRepositoryTest {
     @Autowired
-    protected ChoiceRepository repository;
+    protected ChoiceRepository choiceRepository;
 
     @Test
     public void create() {
-        Choice created = repository.save(new Choice(choice4));
+        Choice created = choiceRepository.save(new Choice(choice4));
         int newId = created.getId();
         Choice newChoice = new Choice(choice4);
         newChoice.setId(newId);
         CHOICE_MATCHER.assertMatch(created, newChoice);
-        CHOICE_MATCHER.assertMatch(repository.get(newId), newChoice);
+        CHOICE_MATCHER.assertMatch(choiceRepository.get(newId), newChoice);
     }
 
     @Test
     void delete() {
-        repository.delete(CHOICE_1_ID);
-        assertThrows(NotFoundException.class, () -> repository.get(CHOICE_1_ID));
+        choiceRepository.delete(CHOICE_1_ID);
+        assertThrows(NotFoundException.class, () -> choiceRepository.get(CHOICE_1_ID));
     }
 
     @Test
     void deletedNotFound() {
-        assertThrows(NotFoundException.class, () -> repository.delete(NOT_FOUND));
+        assertThrows(NotFoundException.class, () -> choiceRepository.delete(NOT_FOUND));
     }
 
     @Test
     void get() {
-        Choice Choice = repository.get(CHOICE_1_ID);
+        Choice Choice = choiceRepository.get(CHOICE_1_ID);
         CHOICE_MATCHER.assertMatch(Choice, choice1);
     }
 
     @Test
     void getNotFound() {
-        assertThrows(NotFoundException.class, () -> repository.get(NOT_FOUND));
+        assertThrows(NotFoundException.class, () -> choiceRepository.get(NOT_FOUND));
     }
 
     @Test
     void update() {
         Choice updated = choice1;
-        repository.update(updated);
-        CHOICE_MATCHER.assertMatch(repository.get(CHOICE_1_ID), choice1);
+        choiceRepository.update(updated);
+        CHOICE_MATCHER.assertMatch(choiceRepository.get(CHOICE_1_ID), choice1);
     }
 
     @Test
     void getAll() {
-        List<Choice> all = repository.getAll();
+        List<Choice> all = choiceRepository.getAll();
         CHOICE_MATCHER.assertMatch(all, choices);
     }
 
     @Test
     void getAllByUserId() {
-        List<Choice> all = repository.getAllByUserId(user.getId());
+        List<Choice> all = choiceRepository.getAllByUserId(user.getId());
         CHOICE_MATCHER.assertMatch(all, choice1, choice3);
     }
     @Test
     void getLastChoiceByUser(){
-        SetDateChoice(repository, LocalTime.MIN,false);
-        Choice choice = repository.getLastChoiceByUser(user.getId());
+        SetDateChoice(choiceRepository, LocalTime.MIN,false);
+        Choice choice = choiceRepository.getLastChoiceByUser(user.getId());
         CHOICE_MATCHER.assertMatch(choice, choice1);
     }
 }

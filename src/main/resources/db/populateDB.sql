@@ -1,15 +1,15 @@
 DELETE
-FROM choices;
+FROM choice;
 DELETE
-FROM meals;
+FROM meal;
 DELETE
 FROM users;
 DELETE
-FROM restaurants;
+FROM restaurant;
 
 ALTER SEQUENCE global_seq RESTART WITH 100000;
 
-INSERT INTO restaurants (name)
+INSERT INTO restaurant (name)
 VALUES ('Alchemist'),
        ('Direkte');
 
@@ -17,7 +17,7 @@ INSERT INTO users (name, email, password, role)
 VALUES ('User', 'user@yandex.ru', 'password', 'USER'),
        ('Admin', 'admin@gmail.com', 'admin', 'ADMIN');
 
-INSERT INTO meals (name, price, restaurant_id)
+INSERT INTO meal (name, price, restaurant_id)
 VALUES ('Omelette', 500, 100000),
        ('Cutlet', 1000, 100000),
        ('Balyk', 300, 100000),
@@ -28,7 +28,7 @@ VALUES ('Omelette', 500, 100000),
        ('Samosa', 300, 100001),
        ('Salad', 450, 100001);
 
-INSERT INTO choices (user_id, restaurant_id)
+INSERT INTO choice (user_id, restaurant_id)
 VALUES (100002, 100000),
        (100003, 100000),
        (100002, 100001);

@@ -14,74 +14,74 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static ru.restaurants.MealTestData.*;
-import static ru.restaurants.RestaurantTestData.*;
 import static ru.restaurants.RestaurantTestData.NOT_FOUND;
+import static ru.restaurants.RestaurantTestData.*;
 
 class DataJpaRestaurantRepositoryTest extends AbstractRepositoryTest {
     @Autowired
-    protected RestaurantRepository repository;
+    protected RestaurantRepository restaurantRepository;
 
     @Test
     public void create() {
-        Restaurant created = repository.save(RestaurantTestData.getNew());
+        Restaurant created = restaurantRepository.save(RestaurantTestData.getNew());
         int newId = created.getId();
         Restaurant newRestaurant = RestaurantTestData.getNew();
         newRestaurant.setId(newId);
         RESTAURANT_MATCHER.assertMatch(created, newRestaurant);
-        RESTAURANT_MATCHER.assertMatch(repository.get(newId), newRestaurant);
+        RESTAURANT_MATCHER.assertMatch(restaurantRepository.get(newId), newRestaurant);
     }
 
     @Test
     void duplicateNameCreate() {
         assertThrows(DataAccessException.class, () ->
-                repository.save(new Restaurant(null, "Direkte")));
+                restaurantRepository.save(new Restaurant(null, "Direkte")));
     }
 
     @Test
     void delete() {
-        repository.delete(RESTAURANT_1_ID);
-        assertThrows(NotFoundException.class, () -> repository.get(RESTAURANT_1_ID));
+        restaurantRepository.delete(RESTAURANT_1_ID);
+        assertThrows(NotFoundException.class, () -> restaurantRepository.get(RESTAURANT_1_ID));
     }
 
     @Test
     void deletedNotFound() {
-        assertThrows(NotFoundException.class, () -> repository.delete(NOT_FOUND));
+        assertThrows(NotFoundException.class, () -> restaurantRepository.delete(NOT_FOUND));
     }
 
     @Test
     void get() {
-        Restaurant restaurant = repository.get(RESTAURANT_2_ID);
+        Restaurant restaurant = restaurantRepository.get(RESTAURANT_2_ID);
         RESTAURANT_MATCHER.assertMatch(restaurant, restaurant2);
     }
 
     @Test
     void getNotFound() {
-        assertThrows(NotFoundException.class, () -> repository.get(NOT_FOUND));
+        assertThrows(NotFoundException.class, () -> restaurantRepository.get(NOT_FOUND));
     }
 
     @Test
     void update() {
         Restaurant updated = RestaurantTestData.getUpdated();
-        repository.update(updated);
-        RESTAURANT_MATCHER.assertMatch(repository.get(RESTAURANT_1_ID), RestaurantTestData.getUpdated());
+        restaurantRepository.update(updated);
+        RESTAURANT_MATCHER.assertMatch(restaurantRepository.get(RESTAURANT_1_ID), RestaurantTestData.getUpdated());
     }
 
     @Test
     void getAll() {
-        List<Restaurant> all = repository.getAll();
+        List<Restaurant> all = restaurantRepository.getAll();
         RESTAURANT_MATCHER.assertMatch(all, restaurant1, restaurant2);
     }
 
     @Test
     void getWithMeals() {
-        Restaurant restaurant = repository.getWithMeals(RESTAURANT_1_ID);
+        Restaurant restaurant = restaurantRepository.getWithMeals(RESTAURANT_1_ID);
         RESTAURANT_MATCHER.assertMatch(restaurant, restaurant1);
         MEAL_MATCHER.assertMatch(restaurant.getMeals(), mealsRestaurant1);
     }
 
     @Test
     void getAllWithMeals() {
-        List<Restaurant> all = repository.getAllWithMeals();
+        List<Restaurant> all = restaurantRepository.getAllWithMeals();
         RESTAURANT_MATCHER.assertMatch(all, restaurant1, restaurant2);
         List<Meal> list = new ArrayList<>();
         for (Restaurant restaurant : all) {

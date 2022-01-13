@@ -8,12 +8,11 @@ import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "choices")
+@Table(name = "choice")
 public class Choice extends AbstractBaseEntity {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "restaurant_id",nullable = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
     private Restaurant restaurant;
 
     @ManyToOne(fetch = FetchType.EAGER)
@@ -23,12 +22,6 @@ public class Choice extends AbstractBaseEntity {
     @Column(name = "registered", nullable = false, columnDefinition = "timestamp default now()")
     @NotNull
     private LocalDateTime registered=LocalDateTime.now();
-
-    public Choice(Integer id, Restaurant restaurant, User user) {
-        super(id);
-        this.restaurant = restaurant;
-        this.user = user;
-    }
 
     public Choice(Integer id, Restaurant restaurant, User user, LocalDateTime registered) {
         super(id);

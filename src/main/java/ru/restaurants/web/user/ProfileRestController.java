@@ -20,27 +20,27 @@ import static ru.restaurants.web.SecurityUtil.authUserId;
 
 @RestController
 @RequestMapping(value = ProfileRestController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
-public class ProfileRestController{
+public class ProfileRestController {
     protected final Logger log = LoggerFactory.getLogger(getClass());
     static final String REST_URL = "/rest/profile";
 
-    private final UserRepository repository;
+    private final UserRepository userRepository;
     private final RestaurantRepository restaurantRepository;
 
     public ProfileRestController(UserRepository repository, RestaurantRepository restaurantRepository) {
-        this.repository = repository;
+        this.userRepository = repository;
         this.restaurantRepository = restaurantRepository;
     }
 
     @GetMapping
     public User get() {
-        return repository.get(authUserId());
+        return userRepository.get(authUserId());
     }
 
     @DeleteMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete() {
-        repository.delete(authUserId());
+        userRepository.delete(authUserId());
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -49,7 +49,7 @@ public class ProfileRestController{
         log.info("create {}", user);
         checkNew(user);
         user.setRole(Role.USER);
-        User created = repository.save(user);
+        User created = userRepository.save(user);
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path(REST_URL).build().toUri();
         return ResponseEntity.created(uriOfNewResource).body(created);
@@ -58,7 +58,7 @@ public class ProfileRestController{
     @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void update(@RequestBody User user) {
-        assureIdConsistent(user,authUserId());
-            repository.update(user);
+        assureIdConsistent(user, authUserId());
+        userRepository.update(user);
     }
 }

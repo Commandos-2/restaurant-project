@@ -21,31 +21,31 @@ import static ru.restaurants.util.ValidationUtil.checkNew;
 public class MealRestController {
     protected final Logger log = LoggerFactory.getLogger(getClass());
 
-    private final MealRepository repository;
+    private final MealRepository mealRepository;
 
     static final String REST_URL = "/rest/admin/meals";
 
-    public MealRestController(MealRepository repository) {
-        this.repository = repository;
+    public MealRestController(MealRepository mealRepository) {
+        this.mealRepository = mealRepository;
     }
 
     @GetMapping("/allByRestaurant/{restaurantId}")
     public List<Meal> getAllByRestaurant(@PathVariable int restaurantId) {
         log.info("getAllByRestaurant");
-        return repository.getAllByRestaurant(restaurantId);
+        return mealRepository.getAllByRestaurant(restaurantId);
     }
 
     @GetMapping("/{id}")
     public Meal get(@PathVariable int id) {
         log.info("get {}", id);
-        return repository.get(id);
+        return mealRepository.get(id);
     }
 
     @PostMapping(value = "/{restaurantId}",consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Meal> createWithLocation(@RequestBody Meal meal,@PathVariable int restaurantId) {
         log.info("create {}", meal);
         checkNew(meal);
-        Meal created = repository.save(meal,restaurantId);
+        Meal created = mealRepository.save(meal,restaurantId);
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path(REST_URL + "/{id}")
                 .buildAndExpand(created.getId()).toUri();
@@ -56,7 +56,7 @@ public class MealRestController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable int id) {
         log.info("delete {}", id);
-        repository.delete(id);
+        mealRepository.delete(id);
     }
 
     @PutMapping(value = "/{restaurantId}", consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -64,6 +64,6 @@ public class MealRestController {
     public void update(@RequestBody Meal meal,@PathVariable int restaurantId) {
         log.info("update {} with id={}", meal, meal.getId());
         assureIdConsistent(meal, meal.getId());
-        repository.update(meal,restaurantId);
+        mealRepository.update(meal,restaurantId);
     }
 }

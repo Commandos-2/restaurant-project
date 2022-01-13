@@ -15,30 +15,30 @@ import java.util.List;
 public class AdminChoiceRestController {
     protected final Logger log = LoggerFactory.getLogger(getClass());
 
-    private final ChoiceRepository repository;
+    private final ChoiceRepository choiceRepository;
 
-    static final String REST_URL = "/rest/admin/choice";
+    static final String REST_URL = "/rest/admin/choices";
 
-    public AdminChoiceRestController(ChoiceRepository repository) {
-        this.repository = repository;
+    public AdminChoiceRestController(ChoiceRepository choiceRepository) {
+        this.choiceRepository = choiceRepository;
     }
 
     @GetMapping
     public List<Choice> getAll() {
         log.info("getAll");
-        return repository.getAll();
+        return choiceRepository.getAll();
     }
 
     @GetMapping("/{id}")
     public Choice get(@PathVariable int id) {
         log.info("get {}", id);
-        return repository.get(id);
+        return choiceRepository.get(id);
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable int id) {
         log.info("delete {}", id);
-        repository.delete(id);
+        choiceRepository.delete(id);
     }
 }

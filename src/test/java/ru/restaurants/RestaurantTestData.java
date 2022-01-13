@@ -5,7 +5,7 @@ import ru.restaurants.model.Restaurant;
 import static ru.restaurants.model.AbstractBaseEntity.START_SEQ;
 
 public class RestaurantTestData {
-    public static final MatcherFactory.Matcher<Restaurant> RESTAURANT_MATCHER = MatcherFactory.usingEqualsComparator(Restaurant.class);
+    public static final MatcherFactory.Matcher<Restaurant> RESTAURANT_MATCHER = MatcherFactory.usingIgnoringFieldsComparator(Restaurant.class,"meals");
 
     public static final int RESTAURANT_1_ID = START_SEQ;
     public static final int RESTAURANT_2_ID = START_SEQ + 1;
