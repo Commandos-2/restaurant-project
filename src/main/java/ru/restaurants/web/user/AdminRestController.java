@@ -21,7 +21,7 @@ import static ru.restaurants.util.ValidationUtil.checkNew;
 public class AdminRestController{
     protected final Logger log = LoggerFactory.getLogger(getClass());
 
-    private final UserRepository repository;
+        private final UserRepository repository;
 
     static final String REST_URL = "/rest/admin/users";
 

@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ru.restaurants.model.Choice;
+import ru.restaurants.model.User;
 import ru.restaurants.repository.choice.ChoiceRepository;
 import ru.restaurants.repository.restaurant.RestaurantRepository;
 import ru.restaurants.web.SecurityUtil;
@@ -44,23 +45,30 @@ public class UserChoiceRestController {
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Choice> createWithLocation(@RequestBody int restaurantId) {
         LocalDateTime localDateTime = LocalDateTime.now();
-        int userId = SecurityUtil.get().getUser().getId();
-        List<Choice> list = repository.getAllByUserId(userId);
-        Choice choice = list.stream().
-                filter((c) -> c.getRegistered().toLocalDate().equals(localDateTime.toLocalDate())).findAny().orElse(null);
-        if (choice != null) {
-            if (localDateTime.toLocalTime().isBefore(limitTime)) {
-                log.info("update Choice, restaurant id={}", restaurantId);
-                choice.setRestaurant(restaurantRepository.get(restaurantId));
-                repository.update(choice);
-                return ResponseEntity.ok(choice);
-            } else {
-                return ResponseEntity.badRequest().body(choice);
+        User user = SecurityUtil.get().getUser();
+        LocalDateTime lastChoice = user.getDateLastChoice();
+        Choice choice=null;
+        if (lastChoice != null) {
+            if (lastChoice.toLocalDate().equals(localDateTime.toLocalDate())) {
+                if (localDateTime.toLocalTime().isBefore(limitTime)) {
+                    int userId = user.getId();
+                    choice = repository.getLastChoiceByUser(userId);
+                    if (choice != null) {
+                        log.info("update Choice, restaurant id={}", restaurantId);
+                        choice.setRestaurant(restaurantRepository.get(restaurantId));
+                        repository.update(choice);
+                        user.setDateLastChoice(localDateTime);
+                        return ResponseEntity.ok(choice);
+                    }
+                }else {
+                    return ResponseEntity.badRequest().body(choice);
+                }
             }
         }
         log.info("create choice restaurant={}", restaurantId);
         Choice created = new Choice(restaurantRepository.get(restaurantId), SecurityUtil.get().getUser());
         Choice saved = repository.save(created);
+        user.setDateLastChoice(localDateTime);
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path(REST_URL + "/{id}")
                 .buildAndExpand(saved.getId()).toUri();

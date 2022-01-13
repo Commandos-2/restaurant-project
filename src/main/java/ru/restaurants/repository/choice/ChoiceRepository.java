@@ -14,7 +14,9 @@ public interface ChoiceRepository {
 
     List<Choice> getAll();
 
-    List<Choice> getAllByUserId(int userID);
+    List<Choice> getAllByUserId(int userId);
 
     Choice update(Choice choice);
+
+    Choice getLastChoiceByUser(int userId);
 }

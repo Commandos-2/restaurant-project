@@ -15,6 +15,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static ru.restaurants.MealTestData.NOT_FOUND;
 import static ru.restaurants.MealTestData.*;
 import static ru.restaurants.RestaurantTestData.*;
+import static ru.restaurants.TestUtil.SetDateMeal;
 
 class DataJpaMealRepositoryTest extends AbstractRepositoryTest {
     @Autowired
@@ -77,6 +78,13 @@ class DataJpaMealRepositoryTest extends AbstractRepositoryTest {
     @Test
     void getAllByRestaurant() {
         List<Meal> all = repository.getAllByRestaurant(RESTAURANT_1_ID);
-        MEAL_MATCHER.assertMatch(all, meals);
+        MEAL_MATCHER.assertMatch(all, mealsRestaurant1);
+    }
+
+    @Test
+    void getAllByRestaurantToday() {
+        SetDateMeal(repository);
+        List<Meal> all = repository.getAllByRestaurantToday(RESTAURANT_1_ID);
+        MEAL_MATCHER.assertMatch(all, meal3, meal1, meal5);
     }
 }

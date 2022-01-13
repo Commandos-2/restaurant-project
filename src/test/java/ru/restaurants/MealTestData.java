@@ -9,7 +9,7 @@ import static ru.restaurants.RestaurantTestData.restaurant2;
 import static ru.restaurants.model.AbstractBaseEntity.START_SEQ;
 
 public class MealTestData {
-    public static final MatcherFactory.Matcher<Meal> MEAL_MATCHER = MatcherFactory.usingIgnoringFieldsComparator(Meal.class, "restaurant");
+    public static final MatcherFactory.Matcher<Meal> MEAL_MATCHER = MatcherFactory.usingIgnoringFieldsComparator(Meal.class, "restaurant","registered");
     public static final int MEAL_ID = START_SEQ + 4;
     public static final int ADMIN_ID = START_SEQ + 9;
     public static final int NOT_FOUND = 10;
@@ -24,7 +24,8 @@ public class MealTestData {
     public static final Meal meal8 = new Meal(ADMIN_ID + 2, "Samosa", 300, restaurant2);
     public static final Meal meal9 = new Meal(ADMIN_ID + 3, "Salad", 450, restaurant2);
 
-    public static final List<Meal> meals = List.of(meal3, meal2, meal1, meal4, meal5);
+    public static final List<Meal> mealsRestaurant1 = List.of(meal3, meal2, meal1, meal4, meal5);
+    public static final List<Meal> meals = List.of(meal3, meal2, meal1, meal4, meal5, meal6, meal7, meal9, meal8);
 
     public static Meal getNew() {
         return new Meal(null, "New", 555,restaurant2);

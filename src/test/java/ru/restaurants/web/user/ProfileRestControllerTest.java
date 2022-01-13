@@ -26,7 +26,7 @@ class ProfileRestControllerTest extends AbstractControllerTest {
 
     @Test
     void register() throws Exception {
-        User newUser = new User(null, "newName", "newPassword", "newemail@ya.ru");
+        User newUser = new User(null, "newName", "newPassword", "newemail@ya.ru",null);
         ResultActions action = perform(MockMvcRequestBuilders.post(REST_URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(newUser)))
@@ -66,7 +66,7 @@ class ProfileRestControllerTest extends AbstractControllerTest {
 
     @Test
     void update() throws Exception {
-        User updated = new User(null, "newName", "newPassword", "user@yandex.ru", Role.USER);
+        User updated = new User(null, "newName", "newPassword", "user@yandex.ru", Role.USER,null);
         perform(MockMvcRequestBuilders.put(REST_URL).contentType(MediaType.APPLICATION_JSON)
                 .with(userHttpBasic(user))
                 .content(JsonUtil.writeValue(updated)))

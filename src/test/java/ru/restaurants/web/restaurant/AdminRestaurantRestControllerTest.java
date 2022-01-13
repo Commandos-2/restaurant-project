@@ -11,10 +11,14 @@ import ru.restaurants.repository.restaurant.RestaurantRepository;
 import ru.restaurants.util.exсeption.NotFoundException;
 import ru.restaurants.web.json.JsonUtil;
 
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static ru.restaurants.MealTestData.MEAL_MATCHER;
+import static ru.restaurants.MealTestData.mealsRestaurant1;
 import static ru.restaurants.RestaurantTestData.*;
 import static ru.restaurants.TestUtil.userHttpBasic;
 import static ru.restaurants.UserTestData.admin;
@@ -79,5 +83,28 @@ class AdminRestaurantRestControllerTest extends AbstractControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(RESTAURANT_MATCHER.contentJson(restaurant1, restaurant2));
+    }
+
+    @Test
+    void getWithMeals() throws Exception {
+        ResultActions action=perform(MockMvcRequestBuilders.get(REST_URL + RESTAURANT_1_ID + "/with-meals")
+                .with(userHttpBasic(admin)))
+                .andExpect(status().isOk())
+                .andDo(print())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(RESTAURANT_MATCHER.contentJson(restaurant1));
+
+        Restaurant created = RESTAURANT_MATCHER.readFromJson(action);
+        MEAL_MATCHER.assertMatch(created.getMeals(), mealsRestaurant1);
+    }
+
+    @Test
+    void getAllWithMeals() throws Exception {
+        perform(MockMvcRequestBuilders.get(REST_URL + "/all-with-meals")
+                .with(userHttpBasic(admin)))
+                .andExpect(status().isOk())
+                .andDo(print())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(RESTAURANT_MATCHER.contentJson(restaurant1,restaurant2));
     }
 }

@@ -1,5 +1,7 @@
 package ru.restaurants.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -7,11 +9,12 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serial;
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Entity
 @Table(name = "users")
-public class User extends AbstractNamedEntity {
+public class User extends AbstractNamedEntity implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;
@@ -33,26 +36,31 @@ public class User extends AbstractNamedEntity {
 
     @Column(name = "registered", nullable = false, columnDefinition = "timestamp default now()", updatable = false)
     @NotNull
-    private Date registered=new Date();
+    private Date registered = new Date();
 
-    public User(Integer id, String name, String password, String email, Role role, Date registered) {
+    @Transient
+    @JsonIgnore
+    private LocalDateTime dateLastChoice;
+
+    public User(Integer id, String name, String password, String email, Role role, Date registered,LocalDateTime dateLastChoice) {
         super(id, name);
         this.password = password;
         this.email = email;
         this.role = role;
         this.registered = registered;
+        this.dateLastChoice= dateLastChoice;
     }
 
-    public User(Integer id, String name, String password, String email, Role role) {
-        this(id,name,password,email,role,new Date());
+    public User(Integer id, String name, String password, String email, Role role,LocalDateTime dateLastChoice) {
+        this(id,name,password,email,role,new Date(),dateLastChoice);
     }
 
-    public User(Integer id, String name, String password, String email) {
-        this(id,name,password,email,null,new Date());
+    public User(Integer id, String name, String password, String email,LocalDateTime dateLastChoice) {
+        this(id,name,password,email,null,new Date(),dateLastChoice);
     }
 
     public User(User user) {
-        this(user.getId(), user.getName(), user.getPassword(), user.getEmail(), user.getRole());
+        this(user.getId(), user.getName(), user.getPassword(), user.getEmail(), user.getRole(),user.getRegistered(),user.dateLastChoice);
     }
 
     public User() {
@@ -98,6 +106,14 @@ public class User extends AbstractNamedEntity {
         this.registered = registered;
     }
 
+    public LocalDateTime getDateLastChoice() {
+        return dateLastChoice;
+    }
+
+    public void setDateLastChoice(LocalDateTime dateLastChoice) {
+        this.dateLastChoice = dateLastChoice;
+    }
+
     @Override
     public String toString() {
         return "User{" +
@@ -107,6 +123,7 @@ public class User extends AbstractNamedEntity {
                 ", email='" + email + '\'' +
                 ", role=" + role +
                 ", registered=" + registered +
+                ", dateLastChoice=" + dateLastChoice +
                 '}';
     }
 }

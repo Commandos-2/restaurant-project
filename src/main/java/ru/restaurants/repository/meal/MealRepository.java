@@ -17,4 +17,6 @@ public interface MealRepository {
     Meal update(Meal meal,int restaurantId);
 
     Meal getWithRestaurant(int id);
+
+    List<Meal> getAllByRestaurantToday(int restaurantId);
 }

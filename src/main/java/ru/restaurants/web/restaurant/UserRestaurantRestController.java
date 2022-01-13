@@ -29,15 +29,15 @@ public class UserRestaurantRestController {
         this.repository = repository;
     }
 
-    @GetMapping("/{id}/with-meals")
-    public Restaurant getWithMeals(@PathVariable int id) {
-        log.info("getWithMeals {}", id);
-        return repository.getWithMeals(id);
+    @GetMapping("/{id}/with-meals-today")
+    public Restaurant getWithMealsToday(@PathVariable int id) {
+        log.info("getWithMealsToday {}", id);
+        return repository.getWithMealsToday(id);
     }
 
-    @GetMapping("/{id}/all-with-meals")
-    public List<Restaurant> getAllWithMeals() {
-        log.info("getAllWithMeals ");
-        return repository.getAllWithMeals();
+    @GetMapping("/all-with-meals-today")
+    public List<Restaurant> getAllWithMealsToday() {
+        log.info("getAllWithMealsToday ");
+        return repository.getAllWithMealsToday();
     }
 }

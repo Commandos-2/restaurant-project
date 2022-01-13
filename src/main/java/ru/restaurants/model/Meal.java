@@ -7,6 +7,7 @@ import org.hibernate.validator.constraints.Range;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "meals")
@@ -23,6 +24,10 @@ public class Meal extends AbstractNamedEntity {
     @NotNull
     private Restaurant restaurant;
 
+    @Column(name = "registered", nullable = false, columnDefinition = "timestamp default now()")
+    @NotNull
+    private LocalDateTime registered = LocalDateTime.now();
+
     public Meal(Integer id, String name, Integer price) {
         super(id, name);
         this.price = price;
@@ -37,7 +42,9 @@ public class Meal extends AbstractNamedEntity {
     public Meal(Meal meal) {
         super(meal.getId(), meal.getName());
         this.price = meal.getPrice();
+        this.registered = meal.registered;
     }
+
     public Meal() {
     }
 
@@ -57,6 +64,14 @@ public class Meal extends AbstractNamedEntity {
         this.restaurant = restaurant;
     }
 
+    public LocalDateTime getRegistered() {
+        return registered;
+    }
+
+    public void setRegistered(LocalDateTime registered) {
+        this.registered = registered;
+    }
+
     @Override
     public String toString() {
         return "Meal{" +
@@ -64,6 +79,7 @@ public class Meal extends AbstractNamedEntity {
                 ", name='" + name + '\'' +
                 ", price=" + price +
                 ", restaurant=" + restaurant +
+                ", registered=" + registered +
                 '}';
     }
 }

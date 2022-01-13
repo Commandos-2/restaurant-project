@@ -6,10 +6,12 @@ import ru.restaurants.model.Choice;
 import ru.restaurants.repository.AbstractRepositoryTest;
 import ru.restaurants.util.exсeption.NotFoundException;
 
+import java.time.LocalTime;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static ru.restaurants.ChoiceTestData.*;
+import static ru.restaurants.TestUtil.SetDateChoice;
 import static ru.restaurants.UserTestData.user;
 
 class DataJpaChoiceRepositoryTest extends AbstractRepositoryTest {
@@ -65,5 +67,11 @@ class DataJpaChoiceRepositoryTest extends AbstractRepositoryTest {
     void getAllByUserId() {
         List<Choice> all = repository.getAllByUserId(user.getId());
         CHOICE_MATCHER.assertMatch(all, choice1, choice3);
+    }
+    @Test
+    void getLastChoiceByUser(){
+        SetDateChoice(repository, LocalTime.MIN,false);
+        Choice choice = repository.getLastChoiceByUser(user.getId());
+        CHOICE_MATCHER.assertMatch(choice, choice1);
     }
 }

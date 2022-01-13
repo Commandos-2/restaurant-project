@@ -7,8 +7,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 import ru.restaurants.model.Choice;
-import ru.restaurants.model.Restaurant;
-import ru.restaurants.model.User;
 
 import java.util.List;
 import java.util.Optional;
@@ -23,11 +21,11 @@ public interface CrudChoiceRepository extends JpaRepository<Choice, Integer> {
     @Query("SELECT u FROM Choice u WHERE u.id=?1")
     Optional<Choice> get(int id);
 
-    @EntityGraph(attributePaths = {"user","restaurant"}, type = EntityGraph.EntityGraphType.LOAD)
+    @EntityGraph(attributePaths = {"user", "restaurant"}, type = EntityGraph.EntityGraphType.LOAD)
     @Query("SELECT u FROM Choice u WHERE u.user.id=:userId ORDER BY u.registered DESC")
     List<Choice> getAllByUserId(@Param("userId") int userId);
 
-    @EntityGraph(attributePaths = {"user","restaurant"}, type = EntityGraph.EntityGraphType.LOAD)
+    @EntityGraph(attributePaths = {"user", "restaurant"}, type = EntityGraph.EntityGraphType.LOAD)
     @Query("FROM Choice ORDER BY registered DESC")
     List<Choice> getAll();
 }

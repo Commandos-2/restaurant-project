@@ -6,55 +6,66 @@ import org.springframework.util.Assert;
 import ru.restaurants.model.Meal;
 import ru.restaurants.repository.restaurant.CrudRestaurantRepository;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static ru.restaurants.util.ValidationUtil.checkNotFoundWithId;
 
 @Repository
 public class DataJpaMealRepository implements MealRepository {
 
-    private final CrudMealRepository crudRepository;
+    private final CrudMealRepository crudMealRepository;
     private final CrudRestaurantRepository crudRestaurantRepository;
 
-    public DataJpaMealRepository(CrudMealRepository crudRepository, CrudRestaurantRepository crudRestaurantRepository) {
-        this.crudRepository = crudRepository;
+    public DataJpaMealRepository(CrudMealRepository crudMealRepository, CrudRestaurantRepository crudRestaurantRepository) {
+        this.crudMealRepository = crudMealRepository;
         this.crudRestaurantRepository = crudRestaurantRepository;
     }
 
     @Override
     @Transactional
-    public Meal save(Meal meal,int restaurant_id) {
+    public Meal save(Meal meal, int restaurant_id) {
         Assert.notNull(meal, "meal must not be null");
         if (!meal.isNew() && get(meal.getId()) == null) {
             return null;
         }
         meal.setRestaurant(crudRestaurantRepository.getById(restaurant_id));
-        return crudRepository.save(meal);
+        return crudMealRepository.save(meal);
     }
 
     @Override
     public void delete(int id) {
-        checkNotFoundWithId(crudRepository.delete(id) != 0,id);
+        checkNotFoundWithId(crudMealRepository.delete(id) != 0, id);
     }
 
     @Override
     public Meal get(int id) {
-        return checkNotFoundWithId(crudRepository.findById(id).orElse(null), id);
+        return checkNotFoundWithId(crudMealRepository.findById(id).orElse(null), id);
     }
 
     @Override
     public List<Meal> getAllByRestaurant(int restaurantId) {
-        return crudRepository.getAllByRestaurant(restaurantId);
+        return crudMealRepository.getAllByRestaurant(restaurantId);
     }
 
     @Override
-    public Meal update(Meal meal,int restaurantId) {
+    @Transactional
+    public List<Meal> getAllByRestaurantToday(int restaurantId) {
+        List<Meal> list = crudMealRepository.getAllByRestaurant(restaurantId);
+        return list.stream().filter(m -> m.getRegistered().isAfter(LocalDateTime.of(LocalDate.now(), LocalTime.MIN))).collect(Collectors.toList());
+    }
+
+    @Override
+    public Meal update(Meal meal, int restaurantId) {
         Assert.notNull(meal, "Meal must not be null");
-        return checkNotFoundWithId(save(meal,restaurantId), meal.getId());
+        return checkNotFoundWithId(save(meal, restaurantId), meal.getId());
     }
 
     @Override
     public Meal getWithRestaurant(int id) {
-        return checkNotFoundWithId(crudRepository.getWithRestaurant(id).orElse(null), id);
+        return checkNotFoundWithId(crudMealRepository.getWithRestaurant(id).orElse(null), id);
     }
 }

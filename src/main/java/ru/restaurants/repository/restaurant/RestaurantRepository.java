@@ -1,9 +1,7 @@
 package ru.restaurants.repository.restaurant;
 
 
-import ru.restaurants.model.Meal;
 import ru.restaurants.model.Restaurant;
-import ru.restaurants.model.User;
 
 import java.util.List;
 
@@ -26,4 +24,8 @@ public interface RestaurantRepository {
     default List<Restaurant> getAllWithMeals() {
         throw new UnsupportedOperationException();
     }
+
+    Restaurant getWithMealsToday(int id);
+
+    List<Restaurant> getAllWithMealsToday();
 }

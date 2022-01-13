@@ -66,4 +66,16 @@ public class AdminRestaurantRestController {
         assureIdConsistent(Restaurant, id);
         repository.update(Restaurant);
     }
+
+    @GetMapping("/{id}/with-meals")
+    public Restaurant getWithMeals(@PathVariable int id) {
+        log.info("getWithMeals {}", id);
+        return repository.getWithMeals(id);
+    }
+
+    @GetMapping("/all-with-meals")
+    public List<Restaurant> getAllWithMeals() {
+        log.info("getAllWithMeals ");
+        return repository.getAllWithMeals();
+    }
 }

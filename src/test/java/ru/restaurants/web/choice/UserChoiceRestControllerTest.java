@@ -7,7 +7,9 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import ru.restaurants.AbstractControllerTest;
 import ru.restaurants.model.Choice;
+import ru.restaurants.model.User;
 import ru.restaurants.repository.choice.ChoiceRepository;
+import ru.restaurants.repository.user.UserRepository;
 import ru.restaurants.web.json.JsonUtil;
 
 import java.time.LocalTime;
@@ -26,9 +28,14 @@ class UserChoiceRestControllerTest extends AbstractControllerTest {
     @Autowired
     private ChoiceRepository repository;
 
+    @Autowired
+    private UserRepository userRepository;
+
     @Test
     void update() throws Exception {
-        SetDateChoice(repository, LocalTime.MAX);
+        SetDateChoice(repository, LocalTime.MAX,true);
+        User updateUser=userRepository.get(USER_ID);
+        updateUser.setDateLastChoice(user.getDateLastChoice());
         ResultActions action = perform(MockMvcRequestBuilders.post(REST_URL)
                 .with(userHttpBasic(user))
                 .contentType(MediaType.APPLICATION_JSON)
@@ -48,7 +55,9 @@ class UserChoiceRestControllerTest extends AbstractControllerTest {
 
     @Test
     void updateAfterLimitTime() throws Exception {
-        SetDateChoice(repository, LocalTime.MIN);
+        SetDateChoice(repository, LocalTime.MIN,true);
+        User updateUser=userRepository.get(USER_ID);
+        updateUser.setDateLastChoice(user.getDateLastChoice());
         perform(MockMvcRequestBuilders.post(REST_URL)
                 .with(userHttpBasic(user))
                 .contentType(MediaType.APPLICATION_JSON)
@@ -58,7 +67,9 @@ class UserChoiceRestControllerTest extends AbstractControllerTest {
 
     @Test
     void createWithLocation() throws Exception {
-        SetDateChoice(repository, LocalTime.MIN);
+        SetDateChoice(repository, LocalTime.MIN,true);
+        User updateadmin=userRepository.get(ADMIN_ID);
+        updateadmin.setDateLastChoice(admin.getDateLastChoice());
         ResultActions action = perform(MockMvcRequestBuilders.post(REST_URL)
                 .with(userHttpBasic(admin))
                 .contentType(MediaType.APPLICATION_JSON)

@@ -12,7 +12,7 @@ import static ru.restaurants.UserTestData.user;
 import static ru.restaurants.model.AbstractBaseEntity.START_SEQ;
 
 public class ChoiceTestData {
-    public static final MatcherFactory.Matcher<Choice> CHOICE_MATCHER = MatcherFactory.usingIgnoringFieldsComparator(Choice.class, "registered","user.registered","restaurant");
+    public static final MatcherFactory.Matcher<Choice> CHOICE_MATCHER = MatcherFactory.usingIgnoringFieldsComparator(Choice.class, "registered","user.registered","restaurant","user.dateLastChoice");
 
     public static final int CHOICE_1_ID = START_SEQ + 13;
     public static final int CHOICE_2_ID = START_SEQ + 14;

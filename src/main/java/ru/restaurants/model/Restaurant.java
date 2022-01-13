@@ -28,6 +28,14 @@ public class Restaurant extends AbstractNamedEntity {
     public Restaurant() {
     }
 
+    public List<Meal> getMeals() {
+        return meals;
+    }
+
+    public void setMeals(List<Meal> meals) {
+        this.meals = meals;
+    }
+
     @Override
     public String toString() {
         return "Restaurant{" +
