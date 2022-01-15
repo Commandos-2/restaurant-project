@@ -1,5 +1,6 @@
 package ru.restaurants.repository.meal;
 
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
@@ -26,6 +27,7 @@ public class MealRepository {
     }
 
     @Transactional
+    @CacheEvict(value = {"getWithMealsToday","getAllWithMealsToday"}, allEntries = true)
     public Meal save(Meal meal, int restaurant_id) {
         Assert.notNull(meal, "meal must not be null");
         if (!meal.isNew() && get(meal.getId()) == null) {
@@ -35,6 +37,7 @@ public class MealRepository {
         return crudMealRepository.save(meal);
     }
 
+    @CacheEvict(value = {"getWithMealsToday","getAllWithMealsToday"}, allEntries = true)
     public void delete(int id) {
         checkNotFoundWithId(crudMealRepository.delete(id) != 0, id);
     }
@@ -53,6 +56,7 @@ public class MealRepository {
         return list.stream().filter(m -> m.getRegistered().isAfter(LocalDateTime.of(LocalDate.now(), LocalTime.MIN))).collect(Collectors.toList());
     }
 
+    @CacheEvict(value = {"getWithMealsToday","getAllWithMealsToday"}, allEntries = true)
     public Meal update(Meal meal, int restaurantId) {
         Assert.notNull(meal, "Meal must not be null");
         return checkNotFoundWithId(save(meal, restaurantId), meal.getId());

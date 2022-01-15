@@ -23,7 +23,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringJUnitWebConfig(locations = {
         "classpath:spring/spring-app.xml",
         "classpath:spring/spring-mvc.xml",
-        "classpath:spring/spring-security.xml",
         "classpath:spring/spring-db.xml"
 })
 @Sql(scripts = "classpath:db/populateDB.sql", config = @SqlConfig(encoding = "UTF-8"))

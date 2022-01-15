@@ -1,5 +1,7 @@
 package ru.restaurants.repository.restaurant;
 
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.Assert;
@@ -27,6 +29,7 @@ public class RestaurantRepository {
         this.crudMealRepository = crudMealRepository;
     }
 
+    @CacheEvict(value = {"getWithMealsToday","getAllWithMealsToday"}, allEntries = true)
     public Restaurant save(Restaurant restaurant) {
         Assert.notNull(restaurant, "restaurant must not be null");
         if (!restaurant.isNew() && get(restaurant.getId()) == null) {
@@ -35,6 +38,7 @@ public class RestaurantRepository {
         return crudRestaurantRepository.save(restaurant);
     }
 
+    @CacheEvict(value = {"getWithMealsToday","getAllWithMealsToday"}, allEntries = true)
     public void delete(int id) {
         checkNotFoundWithId(crudRestaurantRepository.delete(id) != 0, id);
     }
@@ -47,6 +51,7 @@ public class RestaurantRepository {
         return crudRestaurantRepository.findAll(SORT_NAME);
     }
 
+    @CacheEvict(value = {"getWithMealsToday","getAllWithMealsToday"}, allEntries = true)
     public Restaurant update(Restaurant restaurant) {
         Assert.notNull(restaurant, "restaurant must not be null");
         return checkNotFoundWithId(save(restaurant), restaurant.getId());
@@ -56,16 +61,9 @@ public class RestaurantRepository {
         return crudRestaurantRepository.getWithMeals(id).orElse(null);
     }
 
+    @Cacheable("getWithMealsToday")
     public Restaurant getWithMealsToday(int id) {
         Restaurant restaurant = get(id);
-        return getWithMealsTodayUtil(restaurant);
-    }
-
-    public Restaurant getWithMealsToday(Restaurant restaurant) {
-        return getWithMealsTodayUtil(restaurant);
-    }
-
-    private Restaurant getWithMealsTodayUtil(Restaurant restaurant){
         List<Meal> list = crudMealRepository.getAllByRestaurant(restaurant.getId());
         restaurant.setMeals(list.stream().filter(m -> m.getRegistered().isAfter(LocalDateTime.of(LocalDate.now(), LocalTime.MIN))).collect(Collectors.toList()));
         return restaurant;
@@ -75,8 +73,9 @@ public class RestaurantRepository {
         return crudRestaurantRepository.getAllWithMeals();
     }
 
+    @Cacheable("getAllWithMealsToday")
     public List<Restaurant> getAllWithMealsToday() {
         List<Restaurant> list = getAll();
-        return list.stream().map(r -> getWithMealsToday(r)).collect(Collectors.toList());
+        return list.stream().map(r -> getWithMealsToday(r.getId())).collect(Collectors.toList());
     }
 }

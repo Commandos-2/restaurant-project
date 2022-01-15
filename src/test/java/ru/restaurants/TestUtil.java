@@ -14,8 +14,10 @@ import java.time.LocalTime;
 
 import static ru.restaurants.ChoiceTestData.CHOICE_2_ID;
 import static ru.restaurants.ChoiceTestData.CHOICE_3_ID;
+import static ru.restaurants.MealTestData.ADMIN_ID;
 import static ru.restaurants.MealTestData.MEAL_ID;
 import static ru.restaurants.RestaurantTestData.restaurant1;
+import static ru.restaurants.RestaurantTestData.restaurant2;
 import static ru.restaurants.web.choice.UserChoiceRestController.changeLimitTime;
 
 public class TestUtil {
@@ -43,9 +45,12 @@ public class TestUtil {
     public static void SetDateMeal(MealRepository repository) {
         Meal meal2 = repository.get(MEAL_ID + 1);
         Meal meal4 = repository.get(MEAL_ID + 3);
+        Meal meal7 = repository.get(ADMIN_ID + 1);
         meal2.setRegistered(LocalDateTime.of(2022, 01, 8, 10, 20));
         meal4.setRegistered(LocalDateTime.of(2022, 01, 8, 10, 20));
+        meal7.setRegistered(LocalDateTime.of(2022, 01, 8, 10, 20));
         repository.save(meal2, restaurant1.getId());
         repository.save(meal4, restaurant1.getId());
+        repository.save(meal7, restaurant2.getId());
     }
 }

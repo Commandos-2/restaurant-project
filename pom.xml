@@ -18,6 +18,7 @@
         <slf4j.version>1.7.32</slf4j.version>
         <tomcat.version>9.0.54</tomcat.version>
         <spring.security.version>5.6.0</spring.security.version>
+        <ehcache.version>3.9.7</ehcache.version>
         <!-- Hibernate -->
         <hibernate.version>5.6.1.Final</hibernate.version>
         <hibernate-validator.version>6.2.1.Final</hibernate-validator.version>
@@ -71,6 +72,16 @@
             <groupId>org.springframework.data</groupId>
             <artifactId>spring-data-jpa</artifactId>
             <version>2.6.0</version>
+        </dependency>
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger2</artifactId>
+            <version>2.9.2</version>
+        </dependency>
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger-ui</artifactId>
+            <version>2.9.2</version>
         </dependency>
         <!--- ORM -->
         <dependency>
@@ -128,6 +139,32 @@
             <groupId>javax.annotation</groupId>
             <artifactId>javax.annotation-api</artifactId>
             <version>1.3.2</version>
+        </dependency>
+
+        <!-- Cache -->
+        <dependency>
+            <groupId>javax.cache</groupId>
+            <artifactId>cache-api</artifactId>
+            <version>1.1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.ehcache</groupId>
+            <artifactId>ehcache</artifactId>
+            <scope>runtime</scope>
+            <version>${ehcache.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.glassfish.jaxb</groupId>
+                    <artifactId>jaxb-runtime</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <!--https://medium.com/criciumadev/its-time-migrating-to-java-11-5eb3868354f9-->
+        <dependency>
+            <groupId>org.glassfish.jaxb</groupId>
+            <artifactId>jaxb-runtime</artifactId>
+            <version>2.4.0-b180830.0438</version>
         </dependency>
 
         <!--Test-->
@@ -199,6 +236,12 @@
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-config</artifactId>
             <version>${spring.security.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test</artifactId>
+            <version>5.3.13</version>
+            <scope>test</scope>
         </dependency>
 
     </dependencies>
