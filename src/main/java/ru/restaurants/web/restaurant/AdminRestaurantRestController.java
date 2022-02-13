@@ -19,11 +19,9 @@ import static ru.restaurants.util.ValidationUtil.checkNew;
 @RestController
 @RequestMapping(value = AdminRestaurantRestController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
 public class AdminRestaurantRestController {
-    protected final Logger log = LoggerFactory.getLogger(getClass());
-
-    private final RestaurantRepository restaurantRepository;
-
     static final String REST_URL = "/rest/admin/restaurants";
+    protected final Logger log = LoggerFactory.getLogger(getClass());
+    private final RestaurantRepository restaurantRepository;
 
     public AdminRestaurantRestController(RestaurantRepository restaurantRepository) {
         this.restaurantRepository = restaurantRepository;
@@ -42,10 +40,10 @@ public class AdminRestaurantRestController {
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Restaurant> createWithLocation(@RequestBody Restaurant Restaurant) {
-        log.info("create {}", Restaurant);
-        checkNew(Restaurant);
-        Restaurant created = restaurantRepository.save(Restaurant);
+    public ResponseEntity<Restaurant> createWithLocation(@RequestBody Restaurant restaurant) {
+        log.info("create {}", restaurant);
+        checkNew(restaurant);
+        Restaurant created = restaurantRepository.save(restaurant);
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path(REST_URL + "/{id}")
                 .buildAndExpand(created.getId()).toUri();
@@ -61,21 +59,15 @@ public class AdminRestaurantRestController {
 
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void update(@RequestBody Restaurant Restaurant, @PathVariable int id) {
-        log.info("update {} with id={}", Restaurant, id);
-        assureIdConsistent(Restaurant, id);
-        restaurantRepository.update(Restaurant);
+    public void update(@RequestBody Restaurant restaurant, @PathVariable int id) {
+        log.info("update {} with id={}", restaurant, id);
+        assureIdConsistent(restaurant, id);
+        restaurantRepository.update(restaurant);
     }
 
-    @GetMapping("/{id}/with-meals")
-    public Restaurant getWithMeals(@PathVariable int id) {
-        log.info("getWithMeals {}", id);
-        return restaurantRepository.getWithMeals(id);
-    }
-
-    @GetMapping("/all-with-meals")
-    public List<Restaurant> getAllWithMeals() {
-        log.info("getAllWithMeals ");
-        return restaurantRepository.getAllWithMeals();
+    @GetMapping("/{id}/with-dishs")
+    public Restaurant getWithDishes(@PathVariable int id) {
+        log.info("getWithDishes {}", id);
+        return restaurantRepository.getWithDishes(id);
     }
 }

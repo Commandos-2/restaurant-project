@@ -7,7 +7,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 import ru.restaurants.model.Restaurant;
-import ru.restaurants.model.User;
 
 import java.util.List;
 import java.util.Optional;
@@ -19,11 +18,13 @@ public interface CrudRestaurantRepository extends JpaRepository<Restaurant, Inte
     @Query("DELETE FROM Restaurant r WHERE r.id=:id")
     int delete(@Param("id") int id);
 
-    @EntityGraph(attributePaths = {"meals"}, type = EntityGraph.EntityGraphType.LOAD)
-    @Query("SELECT u FROM Restaurant u WHERE u.id=?1")
-    Optional<Restaurant> getWithMeals(int id);
+    @EntityGraph(attributePaths = {"dishes"}, type = EntityGraph.EntityGraphType.LOAD)
+    @Query("SELECT r FROM Restaurant r WHERE r.id=?1")
+    Optional<Restaurant> getWithDishes(int id);
 
-    @EntityGraph(attributePaths = {"meals"}, type = EntityGraph.EntityGraphType.LOAD)
-    @Query("FROM Restaurant")
-    List<Restaurant> getAllWithMeals();
+    @Query("SELECT r FROM Restaurant r JOIN FETCH r.dishes d WHERE r.id=?1 AND d.date=current_date")
+    Optional<Restaurant> getWithDishesToday(int id);
+
+    @Query("SELECT distinct r FROM Restaurant r JOIN FETCH r.dishes d WHERE d.date=current_date ")
+    List<Restaurant> getAllWithDishesToday();
 }

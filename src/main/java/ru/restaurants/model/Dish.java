@@ -1,20 +1,18 @@
 package ru.restaurants.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
 import org.hibernate.validator.constraints.Range;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Entity
-@Table(name = "meal")
-public class Meal extends AbstractNamedEntity {
+@Table(name = "dish")
+public class Dish extends AbstractNamedEntity {
 
     @Column(name = "price", nullable = false)
-    @Range(min = 1, max = 10000)
+    @Range(min = 1)
     private Integer price;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -23,28 +21,26 @@ public class Meal extends AbstractNamedEntity {
     @NotNull
     private Restaurant restaurant;
 
-    @Column(name = "registered", nullable = false, columnDefinition = "timestamp default now()")
+    @Column(name = "date", nullable = false, columnDefinition = "timestamp default now()")
     @NotNull
-    private LocalDateTime registered = LocalDateTime.now();
+    private LocalDate date = LocalDate.now();
 
-    public Meal(Integer id, String name, Integer price) {
-        super(id, name);
-        this.price = price;
+    public Dish(Integer id, String name, Integer price) {
+        this(id, name, price, null);
     }
 
-    public Meal(Integer id, String name, Integer price, Restaurant restaurant) {
+    public Dish(Integer id, String name, Integer price, Restaurant restaurant) {
         super(id, name);
         this.price = price;
         this.restaurant = restaurant;
     }
 
-    public Meal(Meal meal) {
-        super(meal.getId(), meal.getName());
-        this.price = meal.getPrice();
-        this.registered = meal.registered;
+    public Dish(Dish dish) {
+        this(dish.getId(), dish.getName(), dish.getPrice(), dish.getRestaurant());
+        this.date = dish.date;
     }
 
-    public Meal() {
+    public Dish() {
     }
 
     public Integer getPrice() {
@@ -63,22 +59,21 @@ public class Meal extends AbstractNamedEntity {
         this.restaurant = restaurant;
     }
 
-    public LocalDateTime getRegistered() {
-        return registered;
+    public LocalDate getDate() {
+        return date;
     }
 
-    public void setRegistered(LocalDateTime registered) {
-        this.registered = registered;
+    public void setDate(LocalDate date) {
+        this.date = date;
     }
 
     @Override
     public String toString() {
-        return "Meal{" +
+        return "Dish{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", price=" + price +
-                ", restaurant=" + restaurant +
-                ", registered=" + registered +
+                ", registered=" + date +
                 '}';
     }
 }

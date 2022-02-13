@@ -15,9 +15,10 @@ import static ru.restaurants.UserTestData.user;
 class UserRestaurantRestControllerTest extends AbstractControllerTest {
 
     private static final String REST_URL = UserRestaurantRestController.REST_URL + '/';
+
     @Test
-    void getWithMealsToday() throws Exception {
-        perform(MockMvcRequestBuilders.get(REST_URL + RESTAURANT_1_ID + "/with-meals-today")
+    void getWithDishesToday() throws Exception {
+        perform(MockMvcRequestBuilders.get(REST_URL + RESTAURANT_1_ID + "/with-dishs-today")
                 .with(userHttpBasic(user)))
                 .andExpect(status().isOk())
                 .andDo(print())
@@ -26,12 +27,12 @@ class UserRestaurantRestControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    void getAllWithMealsToday() throws Exception {
-        perform(MockMvcRequestBuilders.get(REST_URL +  "/all-with-meals-today")
+    void getAllWithDishesToday() throws Exception {
+        perform(MockMvcRequestBuilders.get(REST_URL + "/all-with-dishs-today")
                 .with(userHttpBasic(user)))
                 .andExpect(status().isOk())
                 .andDo(print())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(RESTAURANT_MATCHER.contentJson(restaurant1,restaurant2));
+                .andExpect(RESTAURANT_MATCHER.contentJson(restaurant1, restaurant2));
     }
 }

@@ -1,4 +1,4 @@
-package ru.restaurants.web.meal;
+package ru.restaurants.web.dish;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -6,82 +6,74 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import ru.restaurants.AbstractControllerTest;
-import ru.restaurants.MealTestData;
-import ru.restaurants.model.Meal;
-import ru.restaurants.repository.meal.MealRepository;
+import ru.restaurants.DishTestData;
+import ru.restaurants.model.Dish;
+import ru.restaurants.repository.dish.DishRepository;
 import ru.restaurants.util.exсeption.NotFoundException;
 import ru.restaurants.web.json.JsonUtil;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static ru.restaurants.MealTestData.*;
-import static ru.restaurants.RestaurantTestData.*;
+import static ru.restaurants.DishTestData.*;
+import static ru.restaurants.RestaurantTestData.RESTAURANT_1_ID;
+import static ru.restaurants.RestaurantTestData.RESTAURANT_2_ID;
 import static ru.restaurants.TestUtil.userHttpBasic;
 import static ru.restaurants.UserTestData.admin;
 
-class MealRestControllerTest extends AbstractControllerTest {
-    private static final String REST_URL = MealRestController.REST_URL + '/';
+class DishRestControllerTest extends AbstractControllerTest {
+    private static final String REST_URL = ru.restaurants.web.dish.DishRestController.REST_URL + '/';
 
     @Autowired
-    private MealRepository mealRepository;
+    private DishRepository dishRepository;
 
     @Test
     void get() throws Exception {
-        perform(MockMvcRequestBuilders.get(REST_URL + MEAL_ID)
+        perform(MockMvcRequestBuilders.get(REST_URL + DISH_ID)
                 .with(userHttpBasic(admin)))
                 .andExpect(status().isOk())
                 .andDo(print())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(MEAL_MATCHER.contentJson(meal1));
+                .andExpect(DISH_MATCHER.contentJson(dish1));
     }
 
     @Test
     void delete() throws Exception {
-        perform(MockMvcRequestBuilders.delete(REST_URL + MEAL_ID)
+        perform(MockMvcRequestBuilders.delete(REST_URL + DISH_ID)
                 .with(userHttpBasic(admin)))
                 .andDo(print())
                 .andExpect(status().isNoContent());
-        assertThrows(NotFoundException.class, () -> mealRepository.get(MEAL_ID));
+        assertThrows(NotFoundException.class, () -> dishRepository.get(DISH_ID));
     }
 
     @Test
     void update() throws Exception {
-        Meal updated = MealTestData.getUpdated();
-        perform(MockMvcRequestBuilders.put(REST_URL + RESTAURANT_2_ID)
+        Dish updated = DishTestData.getUpdated();
+        perform(MockMvcRequestBuilders.put(REST_URL + RESTAURANT_1_ID)
                 .with(userHttpBasic(admin))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(updated)))
                 .andExpect(status().isNoContent());
 
-        MEAL_MATCHER.assertMatch(mealRepository.get(MEAL_ID), updated);
-        RESTAURANT_MATCHER.assertMatch(mealRepository.get(MEAL_ID).getRestaurant(), updated.getRestaurant());
+        DISH_MATCHER.assertMatch(dishRepository.get(DISH_ID), updated);
+        assertEquals(dishRepository.get(DISH_ID).getRestaurant().getId(), updated.getRestaurant().getId());
     }
 
     @Test
     void createWithLocation() throws Exception {
-        Meal newMeal = MealTestData.getNew();
+        Dish newDish = DishTestData.getNew();
         ResultActions action = perform(MockMvcRequestBuilders.post(REST_URL + RESTAURANT_2_ID)
                 .with(userHttpBasic(admin))
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(JsonUtil.writeValue(newMeal)))
+                .content(JsonUtil.writeValue(newDish)))
                 .andExpect(status().isCreated());
 
-        Meal created = MEAL_MATCHER.readFromJson(action);
+        Dish created = DISH_MATCHER.readFromJson(action);
         int newId = created.getId();
-        newMeal.setId(newId);
-        MEAL_MATCHER.assertMatch(created, newMeal);
-        MEAL_MATCHER.assertMatch(mealRepository.get(newId), newMeal);
-  //      RESTAURANT_MATCHER.assertMatch(mealRepository.get(newId).getRestaurant(), newMeal.getRestaurant());
-    }
-
-    @Test
-    void getAllByRestaurant() throws Exception {
-        perform(MockMvcRequestBuilders.get(REST_URL + "allByRestaurant/" + RESTAURANT_1_ID)
-                .with(userHttpBasic(admin)))
-                .andExpect(status().isOk())
-                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(MEAL_MATCHER.contentJson(mealsRestaurant1));
+        newDish.setId(newId);
+        DISH_MATCHER.assertMatch(created, newDish);
+        DISH_MATCHER.assertMatch(dishRepository.get(newId), newDish);
     }
 }

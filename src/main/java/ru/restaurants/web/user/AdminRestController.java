@@ -18,12 +18,10 @@ import static ru.restaurants.util.ValidationUtil.checkNew;
 
 @RestController
 @RequestMapping(value = AdminRestController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
-public class AdminRestController{
-    protected final Logger log = LoggerFactory.getLogger(getClass());
-
-        private final UserRepository userRepository;
-
+public class AdminRestController {
     static final String REST_URL = "/rest/admin/users";
+    protected final Logger log = LoggerFactory.getLogger(getClass());
+    private final UserRepository userRepository;
 
     public AdminRestController(UserRepository userRepository) {
         this.userRepository = userRepository;

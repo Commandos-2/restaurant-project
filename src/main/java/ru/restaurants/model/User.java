@@ -9,7 +9,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serial;
 import java.io.Serializable;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.Date;
 
 @Entity
@@ -40,27 +40,27 @@ public class User extends AbstractNamedEntity implements Serializable {
 
     @Transient
     @JsonIgnore
-    private LocalDateTime dateLastChoice;
+    private LocalDate dateLastChoice;
 
-    public User(Integer id, String name, String password, String email, Role role, Date registered,LocalDateTime dateLastChoice) {
+    public User(Integer id, String name, String password, String email, Role role, Date registered, LocalDate dateLastChoice) {
         super(id, name);
         this.password = password;
         this.email = email;
         this.role = role;
         this.registered = registered;
-        this.dateLastChoice= dateLastChoice;
+        this.dateLastChoice = dateLastChoice;
     }
 
-    public User(Integer id, String name, String password, String email, Role role,LocalDateTime dateLastChoice) {
-        this(id,name,password,email,role,new Date(),dateLastChoice);
+    public User(Integer id, String name, String password, String email, Role role, LocalDate dateLastChoice) {
+        this(id, name, password, email, role, new Date(), dateLastChoice);
     }
 
-    public User(Integer id, String name, String password, String email,LocalDateTime dateLastChoice) {
-        this(id,name,password,email,null,new Date(),dateLastChoice);
+    public User(Integer id, String name, String password, String email, LocalDate dateLastChoice) {
+        this(id, name, password, email, null, dateLastChoice);
     }
 
     public User(User user) {
-        this(user.getId(), user.getName(), user.getPassword(), user.getEmail(), user.getRole(),user.getRegistered(),user.dateLastChoice);
+        this(user.getId(), user.getName(), user.getPassword(), user.getEmail(), user.getRole(), user.getRegistered(), user.dateLastChoice);
     }
 
     public User() {
@@ -68,6 +68,10 @@ public class User extends AbstractNamedEntity implements Serializable {
 
     public Date getRegistered() {
         return registered;
+    }
+
+    public void setRegistered(Date registered) {
+        this.registered = registered;
     }
 
     public Integer getId() {
@@ -82,35 +86,31 @@ public class User extends AbstractNamedEntity implements Serializable {
         return password;
     }
 
-    public String getEmail() {
-        return email;
-    }
-
-    public Role getRole() {
-        return role;
-    }
-
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getEmail() {
+        return email;
     }
 
     public void setEmail(String email) {
         this.email = email;
     }
 
+    public Role getRole() {
+        return role;
+    }
+
     public void setRole(Role role) {
         this.role = role;
     }
 
-    public void setRegistered(Date registered) {
-        this.registered = registered;
-    }
-
-    public LocalDateTime getDateLastChoice() {
+    public LocalDate getDateLastChoice() {
         return dateLastChoice;
     }
 
-    public void setDateLastChoice(LocalDateTime dateLastChoice) {
+    public void setDateLastChoice(LocalDate dateLastChoice) {
         this.dateLastChoice = dateLastChoice;
     }
 

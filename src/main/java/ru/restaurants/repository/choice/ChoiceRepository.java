@@ -3,6 +3,7 @@ package ru.restaurants.repository.choice;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.Assert;
 import ru.restaurants.model.Choice;
+import ru.restaurants.util.exсeption.NotFoundException;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -13,10 +14,9 @@ import static ru.restaurants.util.ValidationUtil.checkNotFoundWithId;
 @Repository
 public class ChoiceRepository {
 
+    private final CrudChoiceRepository crudChoiceRepository;
     @PersistenceContext
     private EntityManager em;
-
-    private final CrudChoiceRepository crudChoiceRepository;
 
     public ChoiceRepository(CrudChoiceRepository crudChoiceRepository) {
         this.crudChoiceRepository = crudChoiceRepository;
@@ -35,7 +35,7 @@ public class ChoiceRepository {
     }
 
     public Choice get(int id) {
-        return checkNotFoundWithId(crudChoiceRepository.get(id).orElse(null), id);
+        return crudChoiceRepository.get(id).orElseThrow(new NotFoundException("Not found entity with ".concat(String.valueOf(id))));
     }
 
     public List<Choice> getAll() {
@@ -52,10 +52,14 @@ public class ChoiceRepository {
     }
 
     public Choice getLastChoiceByUser(int userId) {
-        Object choice = em.createQuery("SELECT u FROM Choice u WHERE u.user.id=?1 ORDER BY u.registered DESC")
+        Object choice = em.createQuery("SELECT u FROM Choice u WHERE u.user.id=?1 ORDER BY u.date DESC")
                 .setMaxResults(1)
                 .setParameter(1, userId)
                 .getSingleResult();
         return (Choice) choice;
+    }
+
+    public Choice getToDayChoiceByUser(int userId) {
+        return crudChoiceRepository.getToDayChoiceByUser(userId).orElseThrow(new NotFoundException("Not found entity with ".concat(String.valueOf(userId))));
     }
 }

@@ -20,7 +20,7 @@ public abstract class AbstractRepositoryTest {
 
     @BeforeTestMethod
     public void setup() {
-        cacheManager.getCache("getWithMealsToday").clear();
-        cacheManager.getCache("getAllWithMealsToday").clear();
+        cacheManager.getCache("getWithDishesToday").clear();
+        cacheManager.getCache("getAllWithDishesToday").clear();
     }
 }

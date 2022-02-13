@@ -14,8 +14,8 @@ public class Restaurant extends AbstractNamedEntity {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "restaurant")
     @OrderBy("name")
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JsonManagedReference()
-    private List<Meal> meals;
+    @JsonManagedReference
+    private List<Dish> dishes;
 
     public Restaurant(Integer id, String name) {
         super(id, name);
@@ -23,18 +23,18 @@ public class Restaurant extends AbstractNamedEntity {
 
     public Restaurant(Restaurant restaurant) {
         super(restaurant.getId(), restaurant.getName());
-        this.setMeals(restaurant.getMeals());
+        this.setDishes(restaurant.getDishes());
     }
 
     public Restaurant() {
     }
 
-    public List<Meal> getMeals() {
-        return meals;
+    public List<Dish> getDishes() {
+        return dishes;
     }
 
-    public void setMeals(List<Meal> meals) {
-        this.meals = meals;
+    public void setDishes(List<Dish> dishes) {
+        this.dishes = dishes;
     }
 
     @Override
@@ -42,7 +42,6 @@ public class Restaurant extends AbstractNamedEntity {
         return "Restaurant{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", meals=" + meals +
                 '}';
     }
 }

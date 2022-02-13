@@ -21,9 +21,8 @@ import static ru.restaurants.web.SecurityUtil.authUserId;
 @RestController
 @RequestMapping(value = ProfileRestController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
 public class ProfileRestController {
-    protected final Logger log = LoggerFactory.getLogger(getClass());
     static final String REST_URL = "/rest/profile";
-
+    protected final Logger log = LoggerFactory.getLogger(getClass());
     private final UserRepository userRepository;
     private final RestaurantRepository restaurantRepository;
 

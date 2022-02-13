@@ -13,11 +13,9 @@ import java.util.List;
 @RestController
 @RequestMapping(value = AdminChoiceRestController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
 public class AdminChoiceRestController {
-    protected final Logger log = LoggerFactory.getLogger(getClass());
-
-    private final ChoiceRepository choiceRepository;
-
     static final String REST_URL = "/rest/admin/choices";
+    protected final Logger log = LoggerFactory.getLogger(getClass());
+    private final ChoiceRepository choiceRepository;
 
     public AdminChoiceRestController(ChoiceRepository choiceRepository) {
         this.choiceRepository = choiceRepository;

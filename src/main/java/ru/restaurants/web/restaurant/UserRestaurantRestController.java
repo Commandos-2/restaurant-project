@@ -15,25 +15,23 @@ import java.util.List;
 @RestController
 @RequestMapping(value = UserRestaurantRestController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
 public class UserRestaurantRestController {
-    protected final Logger log = LoggerFactory.getLogger(getClass());
-
-    private final RestaurantRepository restaurantRepository;
-
     static final String REST_URL = "/rest/restaurants";
+    protected final Logger log = LoggerFactory.getLogger(getClass());
+    private final RestaurantRepository restaurantRepository;
 
     public UserRestaurantRestController(RestaurantRepository restaurantRepository) {
         this.restaurantRepository = restaurantRepository;
     }
 
-    @GetMapping("/{id}/with-meals-today")
-    public Restaurant getWithMealsToday(@PathVariable int id) {
-        log.info("getWithMealsToday {}", id);
-        return restaurantRepository.getWithMealsToday(id);
+    @GetMapping("/{id}/with-dishs-today")
+    public Restaurant getWithDishesToday(@PathVariable int id) {
+        log.info("getWithDishesToday {}", id);
+        return restaurantRepository.getWithDishesToday(id);
     }
 
-    @GetMapping("/all-with-meals-today")
-    public List<Restaurant> getAllWithMealsToday() {
-        log.info("getAllWithMealsToday ");
-        return restaurantRepository.getAllWithMealsToday();
+    @GetMapping("/all-with-dishs-today")
+    public List<Restaurant> getAllWithDishesToday() {
+        log.info("getAllWithDishesToday ");
+        return restaurantRepository.getAllWithDishesToday();
     }
 }

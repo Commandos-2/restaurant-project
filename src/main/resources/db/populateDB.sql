@@ -1,7 +1,7 @@
 DELETE
 FROM choice;
 DELETE
-FROM meal;
+FROM DISH;
 DELETE
 FROM users;
 DELETE
@@ -17,7 +17,7 @@ INSERT INTO users (name, email, password, role)
 VALUES ('User', 'user@yandex.ru', 'password', 'USER'),
        ('Admin', 'admin@gmail.com', 'admin', 'ADMIN');
 
-INSERT INTO meal (name, price, restaurant_id)
+INSERT INTO dish (name, price, restaurant_id)
 VALUES ('Omelette', 500, 100000),
        ('Cutlet', 1000, 100000),
        ('Balyk', 300, 100000),
@@ -29,6 +29,8 @@ VALUES ('Omelette', 500, 100000),
        ('Salad', 450, 100001);
 
 INSERT INTO choice (user_id, restaurant_id)
-VALUES (100002, 100000),
-       (100003, 100000),
-       (100002, 100001);
+VALUES (100002, 100000);
+
+INSERT INTO choice (user_id, restaurant_id, date)
+VALUES (100003, 100000, '2022-01-08'),
+       (100002, 100001, '2022-01-08');

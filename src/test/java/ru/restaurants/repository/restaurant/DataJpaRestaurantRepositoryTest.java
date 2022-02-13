@@ -3,29 +3,28 @@ package ru.restaurants.repository.restaurant;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
-import org.springframework.transaction.annotation.Transactional;
 import ru.restaurants.RestaurantTestData;
-import ru.restaurants.model.Meal;
+import ru.restaurants.model.Dish;
 import ru.restaurants.model.Restaurant;
 import ru.restaurants.repository.AbstractRepositoryTest;
-import ru.restaurants.repository.meal.MealRepository;
+import ru.restaurants.repository.dish.DishRepository;
 import ru.restaurants.util.exсeption.NotFoundException;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static ru.restaurants.MealTestData.*;
+import static ru.restaurants.DishTestData.*;
 import static ru.restaurants.RestaurantTestData.NOT_FOUND;
 import static ru.restaurants.RestaurantTestData.*;
-import static ru.restaurants.TestUtil.SetDateMeal;
+import static ru.restaurants.TestUtil.setDateDish;
 
 class DataJpaRestaurantRepositoryTest extends AbstractRepositoryTest {
     @Autowired
     protected RestaurantRepository restaurantRepository;
 
     @Autowired
-    protected MealRepository mealRepository;
+    protected DishRepository dishRepository;
 
     @Test
     public void create() {
@@ -79,40 +78,29 @@ class DataJpaRestaurantRepositoryTest extends AbstractRepositoryTest {
     }
 
     @Test
-    void getWithMeals() {
-        Restaurant restaurant = restaurantRepository.getWithMeals(RESTAURANT_1_ID);
+    void getWithDishes() {
+        Restaurant restaurant = restaurantRepository.getWithDishes(RESTAURANT_1_ID);
         RESTAURANT_MATCHER.assertMatch(restaurant, restaurant1);
-        MEAL_MATCHER.assertMatch(restaurant.getMeals(), mealsRestaurant1);
+        DISH_MATCHER.assertMatch(restaurant.getDishes(), dishesRestaurant1);
     }
 
     @Test
-    void getAllWithMeals() {
-        List<Restaurant> all = restaurantRepository.getAllWithMeals();
-        RESTAURANT_MATCHER.assertMatch(all, restaurant1, restaurant2);
-        List<Meal> list = new ArrayList<>();
-        for (Restaurant restaurant : all) {
-            list.addAll(restaurant.getMeals());
-        }
-        MEAL_MATCHER.assertMatch(list, meals);
-    }
-
-    @Test
-    void getWithMealsToday() {
-        SetDateMeal(mealRepository);
-        Restaurant restaurant = restaurantRepository.getWithMealsToday(RESTAURANT_1_ID);
+    void getWithDishesToday() {
+        setDateDish(dishRepository);
+        Restaurant restaurant = restaurantRepository.getWithDishesToday(RESTAURANT_1_ID);
         RESTAURANT_MATCHER.assertMatch(restaurant, restaurant1);
-        MEAL_MATCHER.assertMatch(restaurant.getMeals(), meal3, meal1, meal5);
+        DISH_MATCHER.assertMatch(restaurant.getDishes(), dish3, dish1, dish5);
     }
 
     @Test
-    void getAllWithMealsToday() {
-        SetDateMeal(mealRepository);
-        List<Restaurant> all = restaurantRepository.getAllWithMealsToday();
+    void getAllWithDishesToday() {
+        setDateDish(dishRepository);
+        List<Restaurant> all = restaurantRepository.getAllWithDishesToday();
         RESTAURANT_MATCHER.assertMatch(all, restaurant1, restaurant2);
-        List<Meal> list = new ArrayList<>();
+        List<Dish> list = new ArrayList<>();
         for (Restaurant restaurant : all) {
-            list.addAll(restaurant.getMeals());
+            list.addAll(restaurant.getDishes());
         }
-        MEAL_MATCHER.assertMatch(list, meal3, meal1, meal5, meal6, meal9, meal8);
+        DISH_MATCHER.assertMatch(list, dish3, dish1, dish5, dish6, dish9, dish8);
     }
 }

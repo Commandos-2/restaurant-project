@@ -8,7 +8,7 @@ import ru.restaurants.model.User;
 import ru.restaurants.repository.AbstractRepositoryTest;
 import ru.restaurants.util.exсeption.NotFoundException;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -31,7 +31,7 @@ class DataJpaUserRepositoryTest extends AbstractRepositoryTest {
     @Test
     void duplicateMailCreate() {
         assertThrows(DataAccessException.class, () ->
-                userRepository.save(new User(null, "Duplicate", "newPass", "user@yandex.ru", Role.USER, LocalDateTime.now())));
+                userRepository.save(new User(null, "Duplicate", "newPass", "user@yandex.ru", Role.USER, LocalDate.now())));
     }
 
     @Test

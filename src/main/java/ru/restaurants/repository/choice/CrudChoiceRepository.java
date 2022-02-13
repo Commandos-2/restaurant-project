@@ -22,10 +22,13 @@ public interface CrudChoiceRepository extends JpaRepository<Choice, Integer> {
     Optional<Choice> get(int id);
 
     @EntityGraph(attributePaths = {"user", "restaurant"}, type = EntityGraph.EntityGraphType.LOAD)
-    @Query("SELECT u FROM Choice u WHERE u.user.id=:userId ORDER BY u.registered DESC")
+    @Query("SELECT u FROM Choice u WHERE u.user.id=:userId ORDER BY u.date DESC")
     List<Choice> getAllByUserId(@Param("userId") int userId);
 
     @EntityGraph(attributePaths = {"user", "restaurant"}, type = EntityGraph.EntityGraphType.LOAD)
-    @Query("FROM Choice ORDER BY registered DESC")
+    @Query("FROM Choice ORDER BY date DESC")
     List<Choice> getAll();
+
+    @Query("SELECT u FROM Choice u WHERE u.user.id=:userId AND u.date=current_date")
+    Optional<Choice> getToDayChoiceByUser(@Param("userId") int userId);
 }

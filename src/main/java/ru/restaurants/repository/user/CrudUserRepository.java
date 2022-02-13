@@ -1,9 +1,10 @@
 package ru.restaurants.repository.user;
 
-import org.springframework.data.jpa.repository.*;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
-import ru.restaurants.model.Choice;
 import ru.restaurants.model.User;
 
 import java.util.Optional;

@@ -9,10 +9,10 @@ import org.springframework.stereotype.Repository;
 import org.springframework.util.Assert;
 import ru.restaurants.AuthorizedUser;
 import ru.restaurants.model.User;
+import ru.restaurants.util.exсeption.NotFoundException;
 
 import java.util.List;
 
-import static ru.restaurants.util.ValidationUtil.checkNotFound;
 import static ru.restaurants.util.ValidationUtil.checkNotFoundWithId;
 
 @Repository("userRepository")
@@ -36,12 +36,12 @@ public class UserRepository implements UserDetailsService {
     }
 
     public User get(int id) {
-        return checkNotFoundWithId(crudUserRepository.findById(id).orElse(null), id);
+        return crudUserRepository.findById(id).orElseThrow(new NotFoundException("Not found entity with ".concat(String.valueOf(id))));
     }
 
     public User getByEmail(String email) {
         Assert.notNull(email, "email must not be null");
-        return checkNotFound(crudUserRepository.getByEmail(email).orElse(null), "email=" + email);
+        return crudUserRepository.getByEmail(email).orElseThrow(new NotFoundException("Not found entity with".concat(email)));
     }
 
     public List<User> getAll() {

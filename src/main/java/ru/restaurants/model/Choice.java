@@ -1,49 +1,48 @@
 package ru.restaurants.model;
 
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "choice")
 public class Choice extends AbstractBaseEntity {
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "restaurant_id",nullable = false)
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "restaurant_id", nullable = false)
+    @JsonBackReference(value = "restaurant")
     private Restaurant restaurant;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
+    @JsonBackReference(value = "user")
     private User user;
 
-    @Column(name = "registered", nullable = false, columnDefinition = "timestamp default now()")
+    @Column(name = "date", nullable = false, columnDefinition = "timestamp default now()")
     @NotNull
-    private LocalDateTime registered=LocalDateTime.now();
+    private LocalDate date = LocalDate.now();
 
-    public Choice(Integer id, Restaurant restaurant, User user, LocalDateTime registered) {
+    public Choice(Integer id, Restaurant restaurant, User user, LocalDate date) {
         super(id);
         this.restaurant = restaurant;
         this.user = user;
-        this.registered = registered;
+        this.date = date;
+    }
+
+    public Choice(Restaurant restaurant, User user) {
+        this(null, restaurant, user, LocalDate.now());
     }
 
     public Choice(Choice choice) {
         this.restaurant = choice.getRestaurant();
         this.user = choice.user;
-        this.registered = choice.registered;
-        this.id=choice.getId();
+        this.date = choice.date;
+        this.id = choice.getId();
     }
 
-    public Choice(Integer id) {
-        super(id);
-    }
-
-    public Choice(Restaurant restaurant, User user) {
-        this.restaurant = restaurant;
-        this.user = user;
+    public Choice() {
     }
 
     public User getUser() {
@@ -54,11 +53,12 @@ public class Choice extends AbstractBaseEntity {
         this.user = user;
     }
 
-    public Choice() {
+    public LocalDate getDate() {
+        return date;
     }
 
-    public LocalDateTime getRegistered() {
-        return registered;
+    public void setDate(LocalDate registered) {
+        this.date = registered;
     }
 
     public Restaurant getRestaurant() {
@@ -69,17 +69,11 @@ public class Choice extends AbstractBaseEntity {
         this.restaurant = restaurant;
     }
 
-    public void setRegistered(LocalDateTime registered) {
-        this.registered = registered;
-    }
-
     @Override
     public String toString() {
         return "Choice{" +
                 "id=" + id +
-                ", restaurant=" + restaurant +
-                ", user=" + user +
-                ", registered=" + registered +
+                ", date=" + date +
                 '}';
     }
 }

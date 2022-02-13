@@ -11,7 +11,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static ru.restaurants.ChoiceTestData.*;
-import static ru.restaurants.TestUtil.SetDateChoice;
+import static ru.restaurants.TestUtil.setDateChoice;
 import static ru.restaurants.UserTestData.user;
 
 class DataJpaChoiceRepositoryTest extends AbstractRepositoryTest {
@@ -68,9 +68,10 @@ class DataJpaChoiceRepositoryTest extends AbstractRepositoryTest {
         List<Choice> all = choiceRepository.getAllByUserId(user.getId());
         CHOICE_MATCHER.assertMatch(all, choice1, choice3);
     }
+
     @Test
-    void getLastChoiceByUser(){
-        SetDateChoice(choiceRepository, LocalTime.MIN,false);
+    void getLastChoiceByUser() {
+        setDateChoice(choiceRepository, LocalTime.MIN, false);
         Choice choice = choiceRepository.getLastChoiceByUser(user.getId());
         CHOICE_MATCHER.assertMatch(choice, choice1);
     }

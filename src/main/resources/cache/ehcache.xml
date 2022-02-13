@@ -21,6 +21,6 @@
         <heap>1</heap>
     </cache-template>
 
-    <cache alias="getAllWithMealsToday" uses-template="singleNonExpiryCache"/>
-    <cache alias="getWithMealsToday" uses-template="expiryCache"/>
+    <cache alias="getAllWithDishesToday" uses-template="singleNonExpiryCache"/>
+    <cache alias="getWithDishesToday" uses-template="expiryCache"/>
 </config>
